@@ -1,4 +1,6 @@
-class BPCategory {
+import 'package:bp_tablet_app/models/bpmodel.model.dart';
+
+class BPCategory implements BackPointModel {
   int _id = -1;
   String _name = "";
 

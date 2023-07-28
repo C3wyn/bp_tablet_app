@@ -1,7 +1,8 @@
+import 'package:bp_tablet_app/models/bpmodel.model.dart';
 import 'package:bp_tablet_app/models/ingredient.model.dart';
 import 'package:bp_tablet_app/models/productstatus.enum.dart';
 
-class BPProduct {
+class BPProduct implements BackPointModel {
   late String _id;
 
   String get ID => _id;

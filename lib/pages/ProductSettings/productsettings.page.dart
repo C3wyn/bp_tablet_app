@@ -1,4 +1,5 @@
 import 'package:bp_tablet_app/models/ingredient.model.dart';
+import 'package:bp_tablet_app/pages/ProductSettings/IngredientsChipList.widget.dart';
 import 'package:bp_tablet_app/pages/ProductSettings/productsettings.controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,18 +10,18 @@ class ProductSettingsPage extends StatefulWidget {
   const ProductSettingsPage({super.key});
 
   @override
-  State<ProductSettingsPage> createState() => _ProductSettingsPageState();
+  State<ProductSettingsPage> createState() => ProductSettingsPageState();
 }
 
-class _ProductSettingsPageState extends State<ProductSettingsPage> {
-
-  ProductSettingsPageController controller = ProductSettingsPageController();
+class ProductSettingsPageState extends State<ProductSettingsPage> {
+  late ProductSettingsPageController controller;
 
   @override
   Widget build(BuildContext context) {
+    controller = ProductSettingsPageController();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Produkt hinzufügen')
+        title: const Text('Produkt hinzufügen')
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -87,47 +88,11 @@ class _ProductSettingsPageState extends State<ProductSettingsPage> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: FutureBuilder(
-                future: controller.getIngredients(),
-                builder: (builder, snapshot) =>  generateIngredientsList(builder, snapshot, setState)
-              ),
+              child: controller.ingredientsChipWidget
             )
           ],
-          
         )
       )
-    );
-  }
-
-  Widget generateIngredientsList(BuildContext builder, AsyncSnapshot<List<BPIngredient>> snapshot, Function setState) {
-    if(!snapshot.hasData) return const CircularProgressIndicator();
-    List<Widget> result = [];
-    controller.ingredients = {};
-    
-    for(BPIngredient ingredient in snapshot.data!){
-      result.add(
-        FilterChip(
-        selected: /*controller.ingredients[ingredient]!*/ true,
-        label: Text(ingredient.Name),
-        onSelected: (bool selected) {
-          setState(() {
-            controller.ingredients.update(ingredient, (value) => selected);
-            print(controller.ingredients);
-          });
-        },
-      )
-      );
-    }
-    result.add(
-      InputChip(
-        label: const Icon(Icons.add),
-        onPressed: () {},
-      )
-    );
-
-    return Wrap(
-      spacing: 5.0,
-      children: result
     );
   }
 }

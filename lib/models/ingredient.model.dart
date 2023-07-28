@@ -1,4 +1,6 @@
-class BPIngredient {
+import 'package:bp_tablet_app/models/bpmodel.model.dart';
+
+class BPIngredient implements BackPointModel {
   int _id = -1;
   int get ID => _id;
 

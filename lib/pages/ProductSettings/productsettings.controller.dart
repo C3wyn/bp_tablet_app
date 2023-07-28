@@ -1,12 +1,15 @@
 import 'package:bp_tablet_app/models/category.model.dart';
 import 'package:bp_tablet_app/models/ingredient.model.dart';
+import 'package:bp_tablet_app/pages/ProductSettings/IngredientsChipList.widget.dart';
 import 'package:bp_tablet_app/pages/ProductSettings/productsettings.page.dart';
 import 'package:bp_tablet_app/services/APIService/APIService.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/productstatus.enum.dart';
+import '../../services/APIService/Models/apiresponse.model.dart';
 
 class ProductSettingsPageController {
+
   final TextEditingController nameTIController = TextEditingController();
 
   final TextEditingController descriptionTIController = TextEditingController();
@@ -15,7 +18,16 @@ class ProductSettingsPageController {
 
   final  statusTIController = TextEditingController();
 
-  Map<BPIngredient, bool> ingredients = {};
+  late IngredientsChips ingredientsChipWidget;
+
+  Map<BPIngredient, bool> selectedIngredients = {};
+
+  ProductSettingsPageController() {
+    for(BPIngredient ingredient in APIService.data.ingredients){
+      selectedIngredients[ingredient] = false;
+    }
+    ingredientsChipWidget = IngredientsChips(selectedIngredients: selectedIngredients);
+  }
 
   List<DropdownMenuItem<ProductStatus>> generateStatusList() {
 
@@ -47,6 +59,7 @@ class ProductSettingsPageController {
   Widget generateCategoryList(BuildContext context, AsyncSnapshot<List<BPCategory>> snapshot) {
     if(!snapshot.hasData) return const CircularProgressIndicator(); 
     List<DropdownMenuItem<BPCategory>> items = [];
+
     for(BPCategory category in snapshot.data!){
       items.add(
         DropdownMenuItem(
@@ -55,7 +68,7 @@ class ProductSettingsPageController {
         )
       );
     }
-
+  
     return DropdownButtonFormField(
       items: items, 
       onChanged: (value) {},

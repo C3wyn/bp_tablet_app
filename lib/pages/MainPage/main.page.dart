@@ -31,9 +31,14 @@ class _BPMainPageState extends State<BPMainPage> {
           return InkWell(
             child: Container(
               alignment: Alignment.center,
-              child: Text(controller.Products[index].Name, style: TextStyle(fontSize: 32))
+              child: Text(
+                controller.Products[index].Name, 
+                style: TextStyle(fontSize: 32),
+                textAlign: TextAlign.center,
+              )
             ),
-            onTap: () => controller.onProductClick(context, controller.Products[index])
+            onTap: () => controller.onProductClick(context, controller.Products[index]),
+            onLongPress: () => controller.onProductLongPress(context, controller.Products[index]),
           );
         },
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
