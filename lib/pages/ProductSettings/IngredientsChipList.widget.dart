@@ -1,3 +1,4 @@
+import 'package:bp_tablet_app/dialogs/IngredientsDialog/EditIngredients.dialog.dart';
 import 'package:bp_tablet_app/models/ingredient.model.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +19,6 @@ class _IngredientsChipsState extends State<IngredientsChips> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     // Initialisiere die selectedIngredients mit allen Zutaten auf false
     for (BPIngredient ingredient in APIService.data.ingredients) {
@@ -32,15 +32,14 @@ class _IngredientsChipsState extends State<IngredientsChips> {
     
     for(BPIngredient ingredient in APIService.data.ingredients){
       result.add(
-        FilterChip(
-        selected: widget.selectedIngredients[ingredient]?? false,
-        label: Text(ingredient.Name),
-        onSelected: (bool selected) {
-          setState(() {
-            widget.selectedIngredients[ingredient] = selected;
-          });
-        },
-      )
+        InkWell(
+          onLongPress: () => _onChipHold(context, ingredient),
+          child: FilterChip(
+          selected: widget.selectedIngredients[ingredient]?? false,
+          label: Text(ingredient.Name),
+          onSelected: (selected) => _onChipSelect(context, ingredient, selected),
+          ),
+        )
       );
     }
     
@@ -72,7 +71,7 @@ class _IngredientsChipsState extends State<IngredientsChips> {
           )
         ),
         actions: [
-          TextButton(child: const Text('Abbrechen'), onPressed: Navigator.of(context).pop),
+          TextButton(child: Text('Abbrechen'), onPressed: Navigator.of(context).pop),
           ElevatedButton(onPressed: (){
             _createIngredient(controller.text, context);
           }, child: const Text('Hinzufügen'))
@@ -92,5 +91,46 @@ class _IngredientsChipsState extends State<IngredientsChips> {
         content: Text(response.Message),
       )
     );
+  }
+
+  void _onChipHold(BuildContext context, BPIngredient ingredient) {
+    showModalBottomSheet(context: context, builder: (BuildContext con) {
+      return ListView(
+        shrinkWrap: true,
+        children: [
+          InkWell(
+            child: const ListTile(
+              leading: Icon(Icons.edit),
+              title: Text('Bearbeiten')
+            ),
+            onTap: () async {
+              Navigator.of(context).pop();
+              await _onSelectedChipTap(context, ingredient);
+              setState(() {
+                ingredient;
+              });
+            },
+          ),
+          InkWell(
+            child: ListTile(
+              leading: Icon(Icons.delete),
+              title: Text('Löschen')
+            ),
+          ),
+        ],
+      );
+    });
+  }
+  
+  _onChipSelect(BuildContext context, BPIngredient ingredient, bool selected) {
+    setState(() {
+      widget.selectedIngredients[ingredient] = selected;
+    });
+  }
+  
+  _onSelectedChipTap(BuildContext context, BPIngredient? ingredient) async {
+    return await showDialog(context: context, builder: (builder) {
+      return EditIngredientsDialog(ingredient: ingredient);
+    });
   }
 }

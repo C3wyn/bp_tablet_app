@@ -25,4 +25,6 @@ class APIService {
   }
 
   static Future<APIResponse> addIngredient(String name) async  => _ingredientsService.addIngredient(name);
+
+  static Future<APIResponse> updateIngredient(BPIngredient ingredient, {required String name}) async => _ingredientsService.updateIngredient(ingredient, name: name);
 }

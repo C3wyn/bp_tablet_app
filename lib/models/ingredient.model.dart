@@ -8,6 +8,10 @@ class BPIngredient implements BackPointModel {
 
   String get Name => _name;
 
+  set Name(String value) {
+    _name = value;
+  }
+
   BPIngredient(
     int id,
     String name
