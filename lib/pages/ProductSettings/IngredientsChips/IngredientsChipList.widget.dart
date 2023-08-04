@@ -1,9 +1,11 @@
 import 'package:bp_tablet_app/dialogs/IngredientsDialog/EditIngredients.dialog.dart';
+import 'package:bp_tablet_app/dialogs/OptionsDialog/options.dialog.dart';
 import 'package:bp_tablet_app/models/ingredient.model.dart';
+import 'package:bp_tablet_app/pages/ProductSettings/IngredientsChips/DeleteIngredientDialog/DeleteIngredient.dialog.dart';
 import 'package:flutter/material.dart';
 
-import '../../services/APIService/APIService.dart';
-import '../../services/APIService/Models/apiresponse.model.dart';
+import '../../../services/APIService/APIService.dart';
+import '../../../services/APIService/Models/apiresponse.model.dart';
 
 class IngredientsChips extends StatefulWidget {
 
@@ -56,72 +58,43 @@ class _IngredientsChipsState extends State<IngredientsChips> {
     );
   }
 
-  void onAddIngredientClick(BuildContext context) {
-    showDialog(context: context, builder: (builder){
-      TextEditingController controller = TextEditingController();
-      return AlertDialog(
-        title: Text('Zutat hinzufügen'),
-        content: Form(
-          child: TextFormField(
-            controller: controller,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Name'
-            ),
-          )
-        ),
-        actions: [
-          TextButton(child: Text('Abbrechen'), onPressed: Navigator.of(context).pop),
-          ElevatedButton(onPressed: (){
-            _createIngredient(controller.text, context);
-          }, child: const Text('Hinzufügen'))
-        ],
-      );
-    });
-  }
-
-  void _createIngredient(String name, BuildContext context) async {
-    APIResponse response = await APIService.addIngredient(name);
+  void onAddIngredientClick(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (builder) => const EditIngredientsDialog()
+    );
     setState(() {
       widget.selectedIngredients;
     });
-    Navigator.of(context).pop();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(response.Message),
-      )
-    );
   }
 
   void _onChipHold(BuildContext context, BPIngredient ingredient) {
     showModalBottomSheet(context: context, builder: (BuildContext con) {
-      return ListView(
-        shrinkWrap: true,
-        children: [
-          InkWell(
-            child: const ListTile(
-              leading: Icon(Icons.edit),
-              title: Text('Bearbeiten')
-            ),
-            onTap: () async {
-              Navigator.of(context).pop();
-              await _onSelectedChipTap(context, ingredient);
-              setState(() {
-                ingredient;
-              });
-            },
-          ),
-          InkWell(
-            child: ListTile(
-              leading: Icon(Icons.delete),
-              title: Text('Löschen')
-            ),
-          ),
-        ],
+      return OptionsDialog<BPIngredient>(
+        context: context,
+        model: ingredient,
+        onEditClicked: (con, ing) => optionsOnEditSelect(context, ingredient),
+        onDeleteClicked: (con, ing) => optionsOnDeleteSelect(con, ing),
       );
     });
   }
   
+  void optionsOnEditSelect(BuildContext context, BPIngredient ingredient) async {
+    Navigator.of(context).pop();
+    await _onSelectedChipTap(context, ingredient);
+    setState(() {
+      ingredient;
+    });
+  }
+
+  void optionsOnDeleteSelect(BuildContext context, BPIngredient ingredient) async {
+    Navigator.of(context).pop();
+    await _onDeleteIngredient(context, ingredient);
+    setState(() {
+      widget.selectedIngredients;
+    });
+  }
+
   _onChipSelect(BuildContext context, BPIngredient ingredient, bool selected) {
     setState(() {
       widget.selectedIngredients[ingredient] = selected;
@@ -132,5 +105,14 @@ class _IngredientsChipsState extends State<IngredientsChips> {
     return await showDialog(context: context, builder: (builder) {
       return EditIngredientsDialog(ingredient: ingredient);
     });
+  }
+  
+  _onDeleteIngredient(BuildContext context, BPIngredient ingredient) {
+    return showDialog(
+      context: context,
+      builder: (builder) {
+        return DeleteIngredientDialog(ingredient: ingredient);
+      }
+    );
   }
 }

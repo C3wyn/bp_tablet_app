@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bp_tablet_app/models/bpmodel.model.dart';
 
 class BPIngredient implements BackPointModel {
@@ -18,6 +20,19 @@ class BPIngredient implements BackPointModel {
   ){
     _id = id;
     _name = name;
+  }
+
+  String toJson(
+    {
+      String? newName
+    }
+  ) {
+    return jsonEncode({
+      "data": {
+        "ID": _id,
+        "Name": newName?? _name
+      }
+    });
   }
 
   factory BPIngredient.fromJson(int id, Map<String,dynamic> json) {

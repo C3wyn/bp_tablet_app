@@ -52,28 +52,31 @@ class IngredientsAPIService {
   }
 
   Future<APIResponse> updateIngredient(BPIngredient updatedIngredient, {required String name}) async {
-    String body = jsonEncode({
-      "data": {
-        "Name": name
-      }
-    });
 
     var result = await http.put(
       Uri.parse('http://${BPEnvironment.BASEURL}/ingredients/${updatedIngredient.ID}'),
       headers: headers,
-      body: body
+      body: jsonEncode({
+        "data": {
+          "Name": name
+        }
+      })
     );
 
-    Map<String, dynamic> data = jsonDecode(result.body);
-    if(data['data']!=null){
-      updatedIngredient.Name = name;
-      return APIResponse(
-        200,
-        "Successfull", 
-        "Zutat erfolgreich hinzugefügt", 
-        BPIngredient.fromJson(data['data']['id'], data['data']['attributes'])
-      );
-    }
-    return APIResponse(data['error']['status'], data['error']['name'], data['error']['message'], null);
+    APIResponse response = APIResponse.fromJson(result.body);
+    if(response.Code == 200) updatedIngredient.Name = name;
+    return response;
+  }
+
+  Future<APIResponse> deleteIngredient(BPIngredient ingredient) async {
+    var result = await http.delete(
+      Uri.parse('http://${BPEnvironment.BASEURL}/ingredients/${ingredient.ID}'),
+      headers: headers
+    );
+    var response = APIResponse.fromJson(result.body);
+
+    if(response.Code == 200) APIService.data.ingredients.remove(ingredient);
+
+    return response;
   }
 }

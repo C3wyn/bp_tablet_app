@@ -6,6 +6,9 @@ class BPCategory implements BackPointModel {
 
   int get ID => _id;
   String get Name => _name;
+  set Name(String value) {
+    _name = value;
+  }
 
   BPCategory(
     

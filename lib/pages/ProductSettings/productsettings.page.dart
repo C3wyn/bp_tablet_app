@@ -1,5 +1,5 @@
 import 'package:bp_tablet_app/models/ingredient.model.dart';
-import 'package:bp_tablet_app/pages/ProductSettings/IngredientsChipList.widget.dart';
+import 'package:bp_tablet_app/pages/ProductSettings/IngredientsChips/IngredientsChipList.widget.dart';
 import 'package:bp_tablet_app/pages/ProductSettings/productsettings.controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -78,13 +78,9 @@ class ProductSettingsPageState extends State<ProductSettingsPage> {
                 onChanged: (Object? value) {  },
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: FutureBuilder(
-                future: controller.getCategories(),
-                builder: (builder, snapshot) =>  controller.generateCategoryList(builder, snapshot)
-              ),
+              child: controller.categoryChipWidget
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),

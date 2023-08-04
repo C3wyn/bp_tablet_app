@@ -1,6 +1,7 @@
 import 'package:bp_tablet_app/models/category.model.dart';
 import 'package:bp_tablet_app/models/ingredient.model.dart';
-import 'package:bp_tablet_app/pages/ProductSettings/IngredientsChipList.widget.dart';
+import 'package:bp_tablet_app/pages/ProductSettings/CategoryChips/CategoryChipList.widget.dart';
+import 'package:bp_tablet_app/pages/ProductSettings/IngredientsChips/IngredientsChipList.widget.dart';
 import 'package:bp_tablet_app/pages/ProductSettings/productsettings.page.dart';
 import 'package:bp_tablet_app/services/APIService/APIService.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class ProductSettingsPageController {
   final  statusTIController = TextEditingController();
 
   late IngredientsChips ingredientsChipWidget;
+  late CategoryChipList categoryChipWidget;
 
   Map<BPIngredient, bool> selectedIngredients = {};
 
@@ -27,6 +29,7 @@ class ProductSettingsPageController {
       selectedIngredients[ingredient] = false;
     }
     ingredientsChipWidget = IngredientsChips(selectedIngredients: selectedIngredients);
+    categoryChipWidget = CategoryChipList();
   }
 
   List<DropdownMenuItem<ProductStatus>> generateStatusList() {

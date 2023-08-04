@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class EditIngredientsDialog extends StatefulWidget {
   final BPIngredient? ingredient;
 
-  const EditIngredientsDialog({super.key, BPIngredient? this.ingredient});
+  const EditIngredientsDialog({super.key, this.ingredient});
 
   @override
   State<EditIngredientsDialog> createState() => _EditIngredientsDialogState();
@@ -19,7 +19,7 @@ class _EditIngredientsDialogState extends State<EditIngredientsDialog> {
   @override
   void initState() {
     super.initState();
-    _InpNameController.text = widget.ingredient!.Name?? '';
+    if(widget.ingredient!=null) _InpNameController.text = widget.ingredient!.Name?? '';
   }
 
   @override
@@ -57,7 +57,11 @@ class _EditIngredientsDialogState extends State<EditIngredientsDialog> {
     }else{
       response = await APIService.updateIngredient(widget.ingredient!, name: _InpNameController.text);
     }
-    Navigator.of(context).pop();
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(response.Message))
+    );
+    
     setState(() {
       widget.ingredient;
     });
