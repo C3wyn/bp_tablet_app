@@ -11,7 +11,7 @@ class IngredientsChips extends StatefulWidget {
 
   final Map<BPIngredient, bool> selectedIngredients;
 
-  const IngredientsChips({required Map<BPIngredient, bool> this.selectedIngredients, super.key});
+  const IngredientsChips({required this.selectedIngredients, super.key});
 
   @override
   State<IngredientsChips> createState() => _IngredientsChipsState();
@@ -22,15 +22,12 @@ class _IngredientsChipsState extends State<IngredientsChips> {
   @override
   void initState() {
     super.initState();
-    // Initialisiere die selectedIngredients mit allen Zutaten auf false
-    for (BPIngredient ingredient in APIService.data.ingredients) {
-      widget.selectedIngredients[ingredient] = false;
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     List<Widget> result = [];
+    print(widget.selectedIngredients);
     
     for(BPIngredient ingredient in APIService.data.ingredients){
       result.add(

@@ -1,4 +1,5 @@
 import 'package:bp_tablet_app/models/ingredient.model.dart';
+import 'package:bp_tablet_app/models/product.model.dart';
 import 'package:bp_tablet_app/pages/ProductSettings/IngredientsChips/IngredientsChipList.widget.dart';
 import 'package:bp_tablet_app/pages/ProductSettings/productsettings.controller.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,10 @@ import 'package:flutter/services.dart';
 import '../../models/productstatus.enum.dart';
 
 class ProductSettingsPage extends StatefulWidget {
-  const ProductSettingsPage({super.key});
+
+  BPProduct? product;
+
+  ProductSettingsPage({super.key, this.product});
 
   @override
   State<ProductSettingsPage> createState() => ProductSettingsPageState();
@@ -18,10 +22,16 @@ class ProductSettingsPageState extends State<ProductSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    controller = ProductSettingsPageController();
+    controller = ProductSettingsPageController(product: widget.product);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Produkt hinzufügen')
+        title: const Text('Produkt hinzufügen'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.save),
+            onPressed: () => controller.onSave(context),
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -74,8 +84,9 @@ class ProductSettingsPageState extends State<ProductSettingsPage> {
                   border: OutlineInputBorder(),
                   labelText: 'Status'
                 ), 
+                value: controller.selectedStatus,
                 items: controller.generateStatusList(), 
-                onChanged: (Object? value) {  },
+                onChanged: (ProductStatus? value) { controller.selectedStatus=value!; },
               ),
             ),
             Padding(

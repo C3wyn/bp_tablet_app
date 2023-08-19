@@ -10,7 +10,7 @@ class CategoryChipList extends StatefulWidget {
 
   BPCategory? selectedCategory;
 
-  CategoryChipList({super.key});
+  CategoryChipList({super.key, this.selectedCategory});
 
   @override
   State<CategoryChipList> createState() => _CategoryChipListState();
@@ -36,7 +36,7 @@ class _CategoryChipListState extends State<CategoryChipList> {
           onLongPress: () => _onChipHold(context, category),
           child: ChoiceChip(
             label: Text(category.Name), 
-            selected: category == widget.selectedCategory,
+            selected: widget.selectedCategory?.ID==category.ID,
             onSelected: (selected) {
               setState(() {
                 widget.selectedCategory = category;
