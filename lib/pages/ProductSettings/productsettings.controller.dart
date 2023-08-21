@@ -70,9 +70,9 @@ class ProductSettingsPageController {
     return menuItems;
   }
 
-  Future<List<BPCategory>> getCategories() => APIService.getCategories();
+  Future<APIResponse<List<BPCategory>?>> getCategories() => APIService.getCategories();
 
-  Future<List<BPIngredient>> getIngredients() => APIService.getIngredients();
+  Future<APIResponse<List<BPIngredient>?>> getIngredients() => APIService.getIngredients();
 
   Widget generateCategoryList(BuildContext context, AsyncSnapshot<List<BPCategory>> snapshot) {
     if(!snapshot.hasData) return const CircularProgressIndicator(); 

@@ -13,10 +13,10 @@ class _BPMainPageState extends State<BPMainPage> {
 
   BPMainPageController controller = BPMainPageController();
 
-  Future<BPMainPageController> _createController() async => controller.gatherData(); 
-
   @override
   Widget build(BuildContext context) {
+    var _createController = controller.gatherData(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Back Point'),
@@ -33,7 +33,7 @@ class _BPMainPageState extends State<BPMainPage> {
         ],
       ),
       body: FutureBuilder(
-        future: _createController(),
+        future: _createController,
         builder: (BuildContext builder, AsyncSnapshot snapshot) {
 
           if(!snapshot.hasData) return Center(child: CircularProgressIndicator());

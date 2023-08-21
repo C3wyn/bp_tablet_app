@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:bp_tablet_app/models/bpmodel.model.dart';
 
-class APIResponse {
+class APIResponse<T> {
   late int Code;
   late String Name;
   late String Message;
-  late BackPointModel? Result;
+  late T? Result;
 
   bool get isSuccess => Code==200;
 
@@ -14,7 +14,7 @@ class APIResponse {
     int code,
     String name,
     String message,
-    BackPointModel? result
+    T? result
   ){
     Code = code;
     Name = name;
@@ -26,7 +26,7 @@ class APIResponse {
     String json,
     {
       String? onSuccessMessage, 
-      BackPointModel? result
+      T? result
     }
   ){
     Map<String, dynamic> data = jsonDecode(json);

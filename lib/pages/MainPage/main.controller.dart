@@ -1,34 +1,39 @@
 import 'package:bp_tablet_app/dialogs/OptionsDialog/options.dialog.dart';
-import 'package:bp_tablet_app/models/ingredient.model.dart';
+import 'package:bp_tablet_app/dialogs/ProductView4Order/productView4Order.page.dart';
 import 'package:bp_tablet_app/models/product.model.dart';
 import 'package:bp_tablet_app/pages/ProductSettings/productsettings.page.dart';
 import 'package:bp_tablet_app/services/APIService/APIService.dart';
+import 'package:bp_tablet_app/services/APIService/Models/apiresponse.model.dart';
 import 'package:flutter/material.dart';
-
-import '../../dialogs/AddProduct/addproduct.dialog.dart';
 
 class BPMainPageController {
 
   List<BPProduct> _products = [];
   List<BPProduct> get Products => _products;
+  bool pageIsBusy = false;
 
-  BPMainPageController() {
-    APIService.getIngredients();
-    APIService.getCategories();
+  Future<BPMainPageController> gatherData(BuildContext context) async {
+    pageIsBusy = true;
+    var responseIngredients = await APIService.getIngredients();
+    var responseCategories = await APIService.getCategories();
+    var responseProducts = await APIService.getProducts();
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(responseProducts.Message))
+      );
+    if(responseCategories.isSuccess && responseIngredients.isSuccess && responseProducts.isSuccess){
+      _products = APIService.data.products;
+      pageIsBusy = false;
+      return BPMainPageController();
+    }else{
+      await Future.delayed(Duration(seconds: 30));
+      return gatherData(context);
+    }
   }
 
-  Future<BPMainPageController> gatherData() async {
-    await APIService.getIngredients();
-    await APIService.getCategories();
-    await APIService.getProducts();
-    _products = APIService.data.products;
-    return BPMainPageController();
-  }
-
-  void onProductClick(context, product) {
-    showDialog<void>(
+  void onProductClick(context, product) async {
+    await showDialog<void>(
       builder: (BuildContext context) { 
-        return AddProductDialog.createAddProductDialog(context, product);
+        return ProductView4Order(product: product);
        }, 
       context: context
     );

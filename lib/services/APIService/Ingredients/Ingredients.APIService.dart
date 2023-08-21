@@ -14,7 +14,7 @@ class IngredientsAPIService {
     'Accept': 'application/json'
   };
 
-  Future<List<BPIngredient>> getIngredients() async {
+  Future<APIResponse<List<BPIngredient>?>> getIngredients() async {
     var response = await http.get(Uri.parse('http://${BPEnvironment.BASEURL}/ingredients'));
     List<dynamic> data = jsonDecode(response.body)['data'];
     List<BPIngredient> result = [];
@@ -23,7 +23,12 @@ class IngredientsAPIService {
     for(var obj in data){
       result.add(BPIngredient.fromJson(obj['id'], obj['attributes']));
     }
-    return result;
+    
+    if(data.isNotEmpty) {
+      APIService.data.ingredients = result;
+      return APIResponse<List<BPIngredient>>(200, "Successfull", "Alle Produkte erfolgreich erhalten", result);
+    };
+    return APIResponse<List<BPIngredient>>(500, "Fehlgeschlagen", "Es ist ein Fehler aufgetreten", null);
   }
 
   Future<APIResponse> addIngredient(String name) async {

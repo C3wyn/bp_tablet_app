@@ -1,0 +1,4 @@
+enum OrderDeliveryType {
+  EatHere,
+  TakeAway
+}

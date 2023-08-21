@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bp_tablet_app/models/category.model.dart';
+import 'package:bp_tablet_app/models/ingredient.model.dart';
 import 'package:bp_tablet_app/services/APIService/APIService.dart';
 import 'package:bp_tablet_app/services/APIService/Models/apiresponse.model.dart';
 import 'package:file_picker/file_picker.dart';
@@ -15,15 +16,18 @@ class CategoriesAPIService {
     'Accept': 'application/json'
   };
 
-  Future<List<BPCategory>> getCategories() async {
+  Future<APIResponse<List<BPCategory>?>> getCategories() async {
     var response = await http.get(Uri.parse('http://${BPEnvironment.BASEURL}/categories'));
     List<dynamic> data = jsonDecode(response.body)['data'];
     List<BPCategory> result = [];
     for(var obj in data){
-      
       result.add(BPCategory.fromJson(obj['id'], obj['attributes']));
     }
-    return result;
+    if(data.isNotEmpty) {
+      APIService.data.categories = result;
+      return APIResponse<List<BPCategory>>(200, "Successfull", "Alle Produkte erfolgreich erhalten", result);
+    };
+    return APIResponse(500, "Fehlgeschlagen", "Es ist ein Fehler aufgetreten", null);
   }
 
   Future<APIResponse> addCategory(String name, PlatformFile? file) async {

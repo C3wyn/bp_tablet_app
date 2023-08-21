@@ -14,7 +14,7 @@ class ProductsAPIService {
     'Accept': 'application/json'
   };
 
-  Future<List<BPProduct>> getProducts() async {
+  Future<APIResponse> getProducts() async {
     var response = await http.get(Uri.parse('http://${BPEnvironment.BASEURL}/products?populate=Category,Ingredients'));
     Map<String, dynamic> resp = jsonDecode(response.body);
     List<dynamic> data = resp['data'];
@@ -22,10 +22,14 @@ class ProductsAPIService {
     List<BPProduct> result = [];
     
     for(Map<String, dynamic> obj in data){
-      result.add(BPProduct.fromJson(obj));
-      
+      result.add(BPProduct.fromJson(obj)); 
     }
-    return result;
+
+    if(data.isNotEmpty) {
+      APIService.data.products = result;
+      return APIResponse(200, "Successfull", "Alle Produkte erfolgreich erhalten", result);
+    };
+    return APIResponse(500, "Fehlgeschlagen", "Es ist ein Fehler aufgetreten", null);
   }
   
   Future<APIResponse> addProduct(
