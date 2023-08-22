@@ -39,57 +39,75 @@ class _BPMainPageState extends State<BPMainPage> {
           if(!snapshot.hasData) return Center(child: CircularProgressIndicator());
           return Row(
             children: [
-              Container(
+              SizedBox(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width*.7,
-                child: GridView.builder(
-                  itemCount: controller.Products.length,
-                  itemBuilder: (BuildContext context, int index) { 
-                    return InkWell(
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          controller.Products[index].Name, 
-                          style: TextStyle(fontSize: 32),
-                          textAlign: TextAlign.center,
-                        )
-                      ),
-                      onTap: () async {
-                        await controller.onProductClick(context, controller.Products[index]);
-                        setState((){
-                        
-                        controller.Products;
-                        APIService.data.products;
-                      });
-                      },
-                      onLongPress: () => controller.onProductLongPress(context, controller.Products[index]),
-                    );
-                  },
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    childAspectRatio: 1/1,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 20
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GridView.builder(
+                    itemCount: controller.Products.length,
+                    itemBuilder: (BuildContext context, int index) { 
+                      return OutlinedButton(
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            controller.Products[index].Name, 
+                            style: Theme.of(context).textTheme.titleLarge,
+                            textAlign: TextAlign.center,
+                          )
+                        ),
+                        onPressed: () async {
+                          await controller.onProductClick(context, controller.Products[index]);
+                          setState((){
+                          controller.Products;
+                          APIService.data.products;
+                          CartService.currentOrder;
+                        });
+                        },
+                        onLongPress: () => controller.onProductLongPress(context, controller.Products[index]),
+                      );
+                    },
+                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 200,
+                      childAspectRatio: 1/1,
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 20
+                    ),
                   ),
                 ),
               ),
-              Container(
+              SizedBox(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width*.3,
-                child: Column(
-                  children: [
-                    Text('Bestellung', style: Theme.of(context).textTheme.headlineLarge),
-                    Divider(),
-                    ListView.builder(
-                      itemCount: CartService.currentOrder.orderItems.length,
-                      shrinkWrap: true,
-                      itemBuilder:(context, index) {
-                        return ListTile(
-                          title: Text(CartService.currentOrder.orderItems[index].product.Name)
-                        );
-                      },
-                    )
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text('Bestellung', style: Theme.of(context).textTheme.headlineLarge),
+                      const Divider(),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: CartService.currentOrder.orderItems.length,
+                          shrinkWrap: true,
+                          itemBuilder:(context, index) {
+                            return ListTile(
+                              title: Text(CartService.currentOrder.orderItems[index].product.Name),
+                              leading: Text('#${index + 1}')
+                            );
+                          },
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: CartService.currentOrder.orderItems.isEmpty? null: () async {
+                          await controller.onSendOrderClicked(context);
+                          setState((){
+                            CartService.currentOrder;
+                          });
+                        }, 
+                        child: Text('Bestellen', style: Theme.of(context).textTheme.bodyLarge)
+                      )
+                    ],
+                  ),
                 )
               )
             ]

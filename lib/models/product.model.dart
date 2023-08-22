@@ -7,24 +7,31 @@ import 'package:bp_tablet_app/services/APIService/APIService.dart';
 class BPProduct implements BackPointModel {
   late int _id;
   int get ID => _id;
+  set ID(int value) => _id;
 
   late String _name;
   String get Name => _name;
+  set Name(String value) => _name = value;
 
   late List<BPIngredient> _ingredients;
   List<BPIngredient> get Ingredients => _ingredients;
+  set Ingredients(List<BPIngredient> ingredients) => _ingredients=ingredients;
 
   ProductStatus _status = ProductStatus.None;
   ProductStatus get Status => _status;
+  set Status(ProductStatus status) => _status = status;
 
   late String _description;
   String get Description => _description;
+  set Description(String value) => _description=value;
 
   late double _price;
   double get Price => _price;
+  set Price(double value) => _price=value;
 
   late BPCategory? _category;
   BPCategory? get Category => _category;
+  set Category(BPCategory? value) => _category=value;
 
   BPProduct(
     { 

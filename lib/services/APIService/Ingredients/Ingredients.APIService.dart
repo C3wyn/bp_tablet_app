@@ -18,7 +18,6 @@ class IngredientsAPIService {
     var response = await http.get(Uri.parse('http://${BPEnvironment.BASEURL}/ingredients'));
     List<dynamic> data = jsonDecode(response.body)['data'];
     List<BPIngredient> result = [];
-
     
     for(var obj in data){
       result.add(BPIngredient.fromJson(obj['id'], obj['attributes']));

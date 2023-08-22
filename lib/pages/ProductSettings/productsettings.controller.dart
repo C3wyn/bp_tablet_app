@@ -29,7 +29,7 @@ class ProductSettingsPageController {
 
   ProductSettingsPageController({this.product}) {
     for(BPIngredient ingredient in APIService.data.ingredients){
-      selectedIngredients[ingredient] = product?.Ingredients.firstWhere((x) => x.ID==ingredient.ID)!=null? true:false;
+      selectedIngredients[ingredient] = false;
     }
 
     if(product!=null){
@@ -104,15 +104,28 @@ class ProductSettingsPageController {
     for(BPIngredient key in selectedIngredients.keys){
       if(selectedIngredients[key]!) ingredientsIDs.add(key.ID);
     }
+    if(product==null){
+      response = await APIService.addProduct(
+        name: nameTIController.text, 
+        price: double.parse((priceTIController.text).substring(0,priceTIController.text.length-1).replaceAll(",", ".")), 
+        category: categoryChipWidget.selectedCategory!, 
+        status: selectedStatus,
+        description: descriptionTIController.text,
+        ingredients: ingredientsIDs
+      );
+    }else{
+       response = await APIService.updateProduct(
+        id: product!.ID,
+        name: nameTIController.text, 
+        price: double.parse((priceTIController.text).substring(0,priceTIController.text.length-1).replaceAll(",", ".")), 
+        category: categoryChipWidget.selectedCategory!, 
+        status: selectedStatus,
+        description: descriptionTIController.text,
+        ingredients: ingredientsIDs
+      );
+    }
 
-    response = await APIService.addProduct(
-      name: nameTIController.text, 
-      price: double.parse((priceTIController.text).substring(0,priceTIController.text.length-1).replaceAll(",", ".")), 
-      category: categoryChipWidget.selectedCategory!, 
-      status: selectedStatus,
-      description: descriptionTIController.text,
-      ingredients: ingredientsIDs
-    );
+    
     
     if(response.isSuccess) Navigator.of(context).pop();
     ScaffoldMessenger.of(context).showSnackBar(

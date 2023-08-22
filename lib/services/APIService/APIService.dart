@@ -20,15 +20,15 @@ class APIService {
   static final APIDataManager data = APIDataManager();
 
   static Future<APIResponse<List<BPIngredient>?>> getIngredients() => _handleErrors<List<BPIngredient>?>(_ingredientsService.getIngredients());
-  static Future<APIResponse> addIngredient(String name) async  => _ingredientsService.addIngredient(name);
-  static Future<APIResponse> updateIngredient(BPIngredient ingredient, {required String name}) async => _ingredientsService.updateIngredient(ingredient, name: name);
-  static Future<APIResponse> deleteIngredient(BPIngredient ingredient) async => _ingredientsService.deleteIngredient(ingredient);
+  static Future<APIResponse> addIngredient(String name) async  => _handleErrors(_ingredientsService.addIngredient(name));
+  static Future<APIResponse> updateIngredient(BPIngredient ingredient, {required String name}) async => _handleErrors(_ingredientsService.updateIngredient(ingredient, name: name));
+  static Future<APIResponse> deleteIngredient(BPIngredient ingredient) async => _handleErrors(_ingredientsService.deleteIngredient(ingredient));
   
   static Future<APIResponse<List<BPCategory>?>> getCategories() => _handleErrors(_categoriesService.getCategories());
 
-  static Future<APIResponse> addCategory(String name, PlatformFile? file) async  => _categoriesService.addCategory(name, file); 
-  static Future<APIResponse> updateCategory(BPCategory bpCategory, {required String name}) async => _categoriesService.updateCategory(bpCategory, name);
-  static Future<APIResponse> deleteCategory(BPCategory category) async => _categoriesService.deleteCategory(category);
+  static Future<APIResponse> addCategory(String name, PlatformFile? file) async  => _handleErrors(_categoriesService.addCategory(name, file)); 
+  static Future<APIResponse> updateCategory(BPCategory bpCategory, {required String name}) async => _handleErrors(_categoriesService.updateCategory(bpCategory, name));
+  static Future<APIResponse> deleteCategory(BPCategory category) async => _handleErrors(_categoriesService.deleteCategory(category));
 
   static Future<APIResponse> getProducts() => _handleErrors(_productsService.getProducts());
   static Future<APIResponse> addProduct(
@@ -40,21 +40,33 @@ class APIService {
       String? description,
       List<int>? ingredients
     }
-  )=> _productsService.addProduct(
+  )=> _handleErrors(_productsService.addProduct(
     name: name,
     price: price,
     category: category,
     status: status,
     description: description,
     ingredients: ingredients
-  );
+  ));
+  static Future<APIResponse> updateProduct(
+    {
+      required int id, 
+      required String name,
+      required double price,
+      required BPCategory category,
+      required ProductStatus status,
+      String? description,
+      List<int>? ingredients
+    }) => _handleErrors(_productsService.updateProduct(id, name, price, category, status, description, ingredients));
+
 
   static Future<APIResponse> addOrder(BPOrder order) => _handleErrors(_orderService.addOrder(order));
 
   static Future<APIResponse<t>> _handleErrors<t>(Future<APIResponse<t>> next) async {
     try {
       var response = await next;
-      return response;
+      if(response.isSuccess) return response;
+      throw Error();
     }catch(error){
       print(error);
       return APIResponse(
@@ -65,4 +77,5 @@ class APIService {
       );
     }
   }
+
 }

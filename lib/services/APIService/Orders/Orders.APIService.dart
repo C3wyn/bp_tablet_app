@@ -16,30 +16,25 @@ class OrdersAPIService {
   };
   Future<APIResponse> addOrder(BPOrder order) async {
     String body = _orderToJson(order);
-  var response = await http.post(
-    Uri.parse('http://localhost:1337/backpoint/createOrder'),
-    headers: headers,
-    body: body
-  );
-  print(body);
-  print(response.body);
-  Map<String, dynamic> data = jsonDecode(response.body);
-  if(response.statusCode==200){
-    CartService.currentOrder = BPOrder(status: OrderStatus.Created, orderItems: []);
-    return APIResponse(
-      200,
-      "Successfull", 
-      "Produkt erfolgreich hinzugefügt",
-      null
+    var response = await http.post(
+      Uri.parse('http://localhost:1337/backpoint/createOrder'),
+      headers: headers,
+      body: body
     );
-  }
-  return APIResponse(data['error']['status'], data['error']['name'], data['error']['message'], null);
+    Map<String, dynamic> data = jsonDecode(response.body);
+    if(response.statusCode==200){
+      CartService.currentOrder = BPOrder(status: OrderStatus.Created, orderItems: []);
+      return APIResponse(
+        200,
+        "Successfull", 
+        "Produkt erfolgreich hinzugefügt",
+        null
+      );
+    }
+    return APIResponse(data['error']['status'], data['error']['name'], data['error']['message'], null);
   }
   
   String _orderToJson(BPOrder order) {
-
-    
-
     var items = [];
     for(BPOrderItem item in order.orderItems){
       var ingredients = [];
@@ -59,7 +54,7 @@ class OrdersAPIService {
         "id": order.id,
         "items": items,
         "pickUpDate": order.pickUpDate?? DateTime.now().toUtc().toString(),
-        "deliveryType": 1,
+        "deliveryType": order.deliveryType==OrderDeliveryType.EatHere? 2: 1,
         "orderDescription": order.orderDescription
       }
     });

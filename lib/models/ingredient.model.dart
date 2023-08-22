@@ -28,10 +28,8 @@ class BPIngredient implements BackPointModel {
     }
   ) {
     return jsonEncode({
-      "data": {
-        "ID": _id,
-        "Name": newName?? _name
-      }
+      "ID": _id,
+      "Name": newName?? _name
     });
   }
 

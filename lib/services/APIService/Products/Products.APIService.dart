@@ -7,6 +7,7 @@ import 'package:bp_tablet_app/models/product.model.dart';
 import 'package:bp_tablet_app/models/productstatus.enum.dart';
 import 'package:bp_tablet_app/services/APIService/APIService.dart';
 import 'package:bp_tablet_app/services/APIService/Models/apiresponse.model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 class ProductsAPIService {
   Map<String,String> headers = {
@@ -80,34 +81,50 @@ class ProductsAPIService {
     }
     return result;
   }
-  /*
-  Future<APIResponse> updateIngredient(BPIngredient updatedIngredient, {required String name}) async {
 
+  Future<APIResponse> updateProduct(int id, String name, double price, BPCategory category, ProductStatus status, String? description, List<int>? ingredients) async {
+    String body = jsonEncode({
+      "data": {
+        "Name": name,
+        "Price": price,
+        "Category": category.ID,
+        "Status": _productStatusToAPIValue(status),
+        "Description": description,
+        "Ingredients": ingredients?? []
+      }
+    });
     var result = await http.put(
-      Uri.parse('http://${BPEnvironment.BASEURL}/ingredients/${updatedIngredient.ID}'),
+      Uri.parse('http://${BPEnvironment.BASEURL}/products/$id?populate=Category,Ingredients'),
       headers: headers,
-      body: jsonEncode({
-        "data": {
-          "Name": name
-        }
-      })
+      body: body
     );
 
-    APIResponse response = APIResponse.fromJson(result.body);
-    if(response.Code == 200) updatedIngredient.Name = name;
-    return response;
+    Map<String, dynamic> data = jsonDecode(result.body)['data'];
+    Map<String, dynamic>? err = jsonDecode(result.body)['error'];
+
+    if(err==null){
+      BPProduct product = APIService.data.products.firstWhere((x) => x.ID==id);
+      var attributes = data['attributes'];
+      List<BPIngredient> ingredients = [];
+      for(var ingIDs in attributes['Ingredients']['data']){
+        ingredients.add(
+          APIService.data.ingredients.firstWhere((BPIngredient ingredient) => ingredient.ID==ingIDs['id'])
+        );
+      }
+      product.ID = data['id'] as int;
+      product.Name = attributes['Name'] as String;
+      product.Price = double.parse("${attributes['Price']} " );
+      product.Description = attributes['Description'];
+      product.Category = APIService.data.categories.firstWhere((BPCategory cat) => cat.ID == attributes['Category']['data']['id']);
+      product.Ingredients = ingredients;
+      product.Status = ProductStatus.values.byName(attributes['Status'] );
+      return APIResponse(
+        result.statusCode, 
+        "Successfull",
+        "Produkt erfolgreich geändert",
+        product
+      );
+    }
+    throw Error();
   }
-
-  Future<APIResponse> deleteIngredient(BPIngredient ingredient) async {
-    var result = await http.delete(
-      Uri.parse('http://${BPEnvironment.BASEURL}/ingredients/${ingredient.ID}'),
-      headers: headers
-    );
-    var response = APIResponse.fromJson(result.body);
-
-    if(response.Code == 200) APIService.data.ingredients.remove(ingredient);
-
-    return response;
-  }
-  */
 }

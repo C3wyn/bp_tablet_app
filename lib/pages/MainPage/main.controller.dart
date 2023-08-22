@@ -1,3 +1,4 @@
+import 'package:bp_tablet_app/dialogs/ChooseDeliveryType/ChooseDeliveryType.dialog.dart';
 import 'package:bp_tablet_app/dialogs/OptionsDialog/options.dialog.dart';
 import 'package:bp_tablet_app/dialogs/ProductView4Order/productView4Order.page.dart';
 import 'package:bp_tablet_app/models/product.model.dart';
@@ -58,5 +59,12 @@ class BPMainPageController {
     await showDialog(context: context, builder: (builder) {
         return ProductSettingsPage(product: product);
     });
+  }
+
+  onSendOrderClicked(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) => const ChooseDeliveryTypeDialog()
+    );
   }
 }
