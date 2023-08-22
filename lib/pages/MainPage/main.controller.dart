@@ -10,27 +10,27 @@ class BPMainPageController {
 
   List<BPProduct> _products = [];
   List<BPProduct> get Products => _products;
-  bool pageIsBusy = false;
 
   Future<BPMainPageController> gatherData(BuildContext context) async {
-    pageIsBusy = true;
-    var responseIngredients = await APIService.getIngredients();
-    var responseCategories = await APIService.getCategories();
-    var responseProducts = await APIService.getProducts();
-    ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(responseProducts.Message))
-      );
-    if(responseCategories.isSuccess && responseIngredients.isSuccess && responseProducts.isSuccess){
-      _products = APIService.data.products;
-      pageIsBusy = false;
-      return BPMainPageController();
-    }else{
-      await Future.delayed(Duration(seconds: 30));
-      return gatherData(context);
+    if(_products.isEmpty){
+      var responseIngredients = await APIService.getIngredients();
+      var responseCategories = await APIService.getCategories();
+      var responseProducts = await APIService.getProducts();
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(responseProducts.Message))
+        );
+      if(responseCategories.isSuccess && responseIngredients.isSuccess && responseProducts.isSuccess){
+        _products = APIService.data.products;
+        return BPMainPageController();
+      }else{
+        await Future.delayed(Duration(seconds: 30));
+        return gatherData(context);
+      }
     }
+    return BPMainPageController();
   }
 
-  void onProductClick(context, product) async {
+  Future onProductClick(context, product) async {
     await showDialog<void>(
       builder: (BuildContext context) { 
         return ProductView4Order(product: product);

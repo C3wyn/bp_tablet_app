@@ -1,5 +1,6 @@
 import 'package:bp_tablet_app/pages/MainPage/main.controller.dart';
 import 'package:bp_tablet_app/services/APIService/APIService.dart';
+import 'package:bp_tablet_app/services/CartService/Cart.service.dart';
 import 'package:flutter/material.dart';
 
 class BPMainPage extends StatefulWidget {
@@ -15,7 +16,7 @@ class _BPMainPageState extends State<BPMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    var _createController = controller.gatherData(context);
+    var createController = controller.gatherData(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -33,34 +34,66 @@ class _BPMainPageState extends State<BPMainPage> {
         ],
       ),
       body: FutureBuilder(
-        future: _createController,
+        future: createController,
         builder: (BuildContext builder, AsyncSnapshot snapshot) {
-
           if(!snapshot.hasData) return Center(child: CircularProgressIndicator());
-
-          return GridView.builder(
-          itemCount: controller.Products.length,
-          itemBuilder: (BuildContext context, int index) { 
-            return InkWell(
-              child: Container(
-                alignment: Alignment.center,
-                child: Text(
-                  controller.Products[index].Name, 
-                  style: TextStyle(fontSize: 32),
-                  textAlign: TextAlign.center,
-                )
+          return Row(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width*.7,
+                child: GridView.builder(
+                  itemCount: controller.Products.length,
+                  itemBuilder: (BuildContext context, int index) { 
+                    return InkWell(
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          controller.Products[index].Name, 
+                          style: TextStyle(fontSize: 32),
+                          textAlign: TextAlign.center,
+                        )
+                      ),
+                      onTap: () async {
+                        await controller.onProductClick(context, controller.Products[index]);
+                        setState((){
+                        
+                        controller.Products;
+                        APIService.data.products;
+                      });
+                      },
+                      onLongPress: () => controller.onProductLongPress(context, controller.Products[index]),
+                    );
+                  },
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 200,
+                    childAspectRatio: 1/1,
+                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 20
+                  ),
+                ),
               ),
-              onTap: () => controller.onProductClick(context, controller.Products[index]),
-              onLongPress: () => controller.onProductLongPress(context, controller.Products[index]),
-            );
-          },
-          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 200,
-            childAspectRatio: 3 / 2,
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 20
-          ),
-        );
+              Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width*.3,
+                child: Column(
+                  children: [
+                    Text('Bestellung', style: Theme.of(context).textTheme.headlineLarge),
+                    Divider(),
+                    ListView.builder(
+                      itemCount: CartService.currentOrder.orderItems.length,
+                      shrinkWrap: true,
+                      itemBuilder:(context, index) {
+                        return ListTile(
+                          title: Text(CartService.currentOrder.orderItems[index].product.Name)
+                        );
+                      },
+                    )
+                  ],
+                )
+              )
+            ]
+          );
       }
     )
   );
