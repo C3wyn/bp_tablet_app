@@ -48,7 +48,7 @@ class OrdersAPIService {
         "customerDescription": item.customerDescription
       });
     }
-
+    
     return jsonEncode({
       "data": {
         "id": order.id,
