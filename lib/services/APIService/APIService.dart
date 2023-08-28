@@ -1,10 +1,12 @@
 import 'package:bp_tablet_app/models/Order/order.model.dart';
 import 'package:bp_tablet_app/models/category.model.dart';
+import 'package:bp_tablet_app/models/extra.model.dart';
 import 'package:bp_tablet_app/models/ingredient.model.dart';
 import 'package:bp_tablet_app/models/product.model.dart';
 import 'package:bp_tablet_app/models/productstatus.enum.dart';
 import 'package:bp_tablet_app/services/APIService/Categories/Categories.APIService.dart';
 import 'package:bp_tablet_app/services/APIService/DataManager/datamanger.APIService.dart';
+import 'package:bp_tablet_app/services/APIService/Extras/Extras.APIService.dart';
 import 'package:bp_tablet_app/services/APIService/Ingredients/Ingredients.APIService.dart';
 import 'package:bp_tablet_app/services/APIService/Models/apiresponse.model.dart';
 import 'package:bp_tablet_app/services/APIService/Orders/Orders.APIService.dart';
@@ -17,6 +19,7 @@ class APIService {
   static final IngredientsAPIService _ingredientsService = IngredientsAPIService();
   static final ProductsAPIService _productsService = ProductsAPIService();
   static final OrdersAPIService _orderService = OrdersAPIService();
+  static final ExtrasAPIService _extrasService = ExtrasAPIService();
   static final APIDataManager data = APIDataManager();
 
   static Future<APIResponse<List<BPIngredient>?>> getIngredients() => _handleErrors<List<BPIngredient>?>(_ingredientsService.getIngredients());
@@ -30,7 +33,7 @@ class APIService {
   static Future<APIResponse> updateCategory(BPCategory bpCategory, {required String name}) async => _handleErrors(_categoriesService.updateCategory(bpCategory, name));
   static Future<APIResponse> deleteCategory(BPCategory category) async => _handleErrors(_categoriesService.deleteCategory(category));
 
-  static Future<APIResponse> getProducts() => _handleErrors(_productsService.getProducts());
+  static Future<APIResponse> getProducts() => _productsService.getProducts();
   static Future<APIResponse> addProduct(
     {
       required String name,
@@ -38,7 +41,8 @@ class APIService {
       required BPCategory category,
       required ProductStatus status,
       String? description,
-      List<int>? ingredients
+      List<int>? ingredients,
+      List<int>? extras
     }
   )=> _handleErrors(_productsService.addProduct(
     name: name,
@@ -46,7 +50,8 @@ class APIService {
     category: category,
     status: status,
     description: description,
-    ingredients: ingredients
+    ingredients: ingredients,
+    extras: extras
   ));
   static Future<APIResponse> updateProduct(
     {
@@ -56,11 +61,17 @@ class APIService {
       required BPCategory category,
       required ProductStatus status,
       String? description,
-      List<int>? ingredients
-    }) => _handleErrors(_productsService.updateProduct(id, name, price, category, status, description, ingredients));
+      List<int>? ingredients,
+      List<int>? extras
+    }) => _handleErrors(_productsService.updateProduct(id, name, price, category, status, description, ingredients, extras));
 
 
   static Future<APIResponse> addOrder(BPOrder order) => _handleErrors(_orderService.addOrder(order));
+
+  static Future<APIResponse> getExtras() => _extrasService.getExtras();
+  static Future<APIResponse> addExtra(String name) async  => _handleErrors(_extrasService.addExtra(name));
+  static Future<APIResponse> updateExtra(BPExtra, {required String name}) async => _handleErrors(_extrasService.updateExtra(BPExtra, name: name));
+  static Future<APIResponse> deleteExtra(BPExtra extra) async => _handleErrors(_extrasService.deleteExtra(extra));
 
   static Future<APIResponse<t>> _handleErrors<t>(Future<APIResponse<t>> next) async {
     try {

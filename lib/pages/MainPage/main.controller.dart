@@ -17,6 +17,7 @@ class BPMainPageController {
       var responseIngredients = await APIService.getIngredients();
       var responseCategories = await APIService.getCategories();
       var responseProducts = await APIService.getProducts();
+      var responseExtras = await APIService.getExtras();
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(responseProducts.Message))
         );

@@ -27,7 +27,6 @@ class _IngredientsChipsState extends State<IngredientsChips> {
   @override
   Widget build(BuildContext context) {
     List<Widget> result = [];
-    print(widget.selectedIngredients);
     
     for(BPIngredient ingredient in APIService.data.ingredients){
       result.add(

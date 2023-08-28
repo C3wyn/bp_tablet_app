@@ -1,7 +1,9 @@
 import 'package:bp_tablet_app/models/category.model.dart';
+import 'package:bp_tablet_app/models/extra.model.dart';
 import 'package:bp_tablet_app/models/ingredient.model.dart';
 import 'package:bp_tablet_app/models/product.model.dart';
 import 'package:bp_tablet_app/pages/ProductSettings/CategoryChips/CategoryChipList.widget.dart';
+import 'package:bp_tablet_app/pages/ProductSettings/ExtrasChips/ExtrasChipList.widget.dart';
 import 'package:bp_tablet_app/pages/ProductSettings/IngredientsChips/IngredientsChipList.widget.dart';
 import 'package:bp_tablet_app/pages/ProductSettings/productsettings.page.dart';
 import 'package:bp_tablet_app/services/APIService/APIService.dart';
@@ -24,8 +26,10 @@ class ProductSettingsPageController {
 
   late IngredientsChips ingredientsChipWidget;
   late CategoryChipList categoryChipWidget;
+  late ExtrasChips extraChipWidget;
 
   Map<BPIngredient, bool> selectedIngredients = {};
+  Map<BPExtra, bool> selectedExtras = {};
 
   ProductSettingsPageController({this.product}) {
     for(BPIngredient ingredient in APIService.data.ingredients){
@@ -41,9 +45,13 @@ class ProductSettingsPageController {
       for(BPIngredient ingredient in product!.Ingredients){
         selectedIngredients[ingredient] = true;
       }
+      for(BPExtra extra in product!.Extras){
+        selectedExtras[extra] = true;
+      }
     }
     ingredientsChipWidget = IngredientsChips(selectedIngredients: selectedIngredients); 
     categoryChipWidget = CategoryChipList(selectedCategory: product?.Category);
+    extraChipWidget = ExtrasChips(selectedExtras: selectedExtras);
   }
 
   List<DropdownMenuItem<ProductStatus>> generateStatusList() {
@@ -104,6 +112,11 @@ class ProductSettingsPageController {
     for(BPIngredient key in selectedIngredients.keys){
       if(selectedIngredients[key]!) ingredientsIDs.add(key.ID);
     }
+    List<int> extrasIDs = [];
+    for(BPExtra key in selectedExtras.keys){
+      if(selectedExtras[key]!) extrasIDs.add(key.ID);
+    }
+    print(extrasIDs);
     if(product==null){
       response = await APIService.addProduct(
         name: nameTIController.text, 
@@ -111,7 +124,8 @@ class ProductSettingsPageController {
         category: categoryChipWidget.selectedCategory!, 
         status: selectedStatus,
         description: descriptionTIController.text,
-        ingredients: ingredientsIDs
+        ingredients: ingredientsIDs,
+        extras: extrasIDs
       );
     }else{
        response = await APIService.updateProduct(
@@ -121,7 +135,8 @@ class ProductSettingsPageController {
         category: categoryChipWidget.selectedCategory!, 
         status: selectedStatus,
         description: descriptionTIController.text,
-        ingredients: ingredientsIDs
+        ingredients: ingredientsIDs,
+        extras: extrasIDs
       );
     }
 

@@ -1,5 +1,6 @@
 import 'package:bp_tablet_app/models/bpmodel.model.dart';
 import 'package:bp_tablet_app/models/category.model.dart';
+import 'package:bp_tablet_app/models/extra.model.dart';
 import 'package:bp_tablet_app/models/ingredient.model.dart';
 import 'package:bp_tablet_app/models/productstatus.enum.dart';
 import 'package:bp_tablet_app/services/APIService/APIService.dart';
@@ -33,6 +34,8 @@ class BPProduct implements BackPointModel {
   BPCategory? get Category => _category;
   set Category(BPCategory? value) => _category=value;
 
+  late List<BPExtra> Extras;
+
   BPProduct(
     { 
       required int id,
@@ -41,7 +44,8 @@ class BPProduct implements BackPointModel {
       String? description,
       BPCategory? category,
       List<BPIngredient>? ingredients,
-      ProductStatus? status
+      ProductStatus? status,
+      List<BPExtra>? extras
     }
   ){
     
@@ -52,9 +56,11 @@ class BPProduct implements BackPointModel {
     _status = status?? ProductStatus.None;
     _category = category;
     _price = price;
+    Extras = extras?? [];
   }
 
   factory BPProduct.fromJson(Map<String, dynamic> json) {
+    print(json);
     var attributes = json['attributes'];
     List<BPIngredient> ingredients = [];
     for(var ingIDs in attributes['Ingredients']['data']){
@@ -62,7 +68,15 @@ class BPProduct implements BackPointModel {
         APIService.data.ingredients.firstWhere((BPIngredient ingredient) => ingredient.ID==ingIDs['id'])
       );
     }
-
+    List<BPExtra> extras = [];
+    if(attributes['Extras'] != null){
+      for(var extra in attributes['Extras']['data']){
+        extras.add(
+          BPExtra.fromJson(extra)
+        );
+      }
+    }
+    
     return BPProduct(
       id: json['id'] as int,
       name: attributes['Name'] as String,
@@ -70,7 +84,8 @@ class BPProduct implements BackPointModel {
       description: attributes['Description'] ,
       category: APIService.data.categories.firstWhere((BPCategory cat) => cat.ID == attributes['Category']['data']['id']),
       ingredients: ingredients,
-      status: ProductStatus.values.byName(attributes['Status'] ) 
+      status: ProductStatus.values.byName(attributes['Status'] ) ,
+      extras: extras
     );
   }
 }

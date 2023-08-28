@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bp_tablet_app/environment.dart';
 import 'package:bp_tablet_app/models/category.model.dart';
+import 'package:bp_tablet_app/models/extra.model.dart';
 import 'package:bp_tablet_app/models/ingredient.model.dart';
 import 'package:bp_tablet_app/models/product.model.dart';
 import 'package:bp_tablet_app/models/productstatus.enum.dart';
@@ -16,7 +17,7 @@ class ProductsAPIService {
   };
 
   Future<APIResponse> getProducts() async {
-    var response = await http.get(Uri.parse('http://${BPEnvironment.BASEURL}/products?populate=Category,Ingredients'));
+    var response = await http.get(Uri.parse('http://${BPEnvironment.BASEURL}/products?populate=Category,Ingredients,Extras'));
     Map<String, dynamic> resp = jsonDecode(response.body);
     List<dynamic> data = resp['data'];
     Map<String, dynamic>? err = resp['error'];
@@ -40,7 +41,8 @@ class ProductsAPIService {
       required BPCategory category,
       required ProductStatus status,
       String? description,
-      List<int>? ingredients
+      List<int>? ingredients, 
+      List<int>? extras
     }
   ) async {
     String body = jsonEncode({
@@ -50,7 +52,8 @@ class ProductsAPIService {
         "Category": category.ID,
         "Status": _productStatusToAPIValue(status),
         "Description": description,
-        "Ingredients": ingredients?? []
+        "Ingredients": ingredients?? [],
+        "Extras": extras?? []
       }
     });
     var response = await http.post(
@@ -82,7 +85,7 @@ class ProductsAPIService {
     return result;
   }
 
-  Future<APIResponse> updateProduct(int id, String name, double price, BPCategory category, ProductStatus status, String? description, List<int>? ingredients) async {
+  Future<APIResponse> updateProduct(int id, String name, double price, BPCategory category, ProductStatus status, String? description, List<int>? ingredients, List<int>? extras) async {
     String body = jsonEncode({
       "data": {
         "Name": name,
@@ -90,11 +93,13 @@ class ProductsAPIService {
         "Category": category.ID,
         "Status": _productStatusToAPIValue(status),
         "Description": description,
-        "Ingredients": ingredients?? []
+        "Ingredients": ingredients?? [],
+        "Extras": extras?? []
       }
     });
+    print(body);
     var result = await http.put(
-      Uri.parse('http://${BPEnvironment.BASEURL}/products/$id?populate=Category,Ingredients'),
+      Uri.parse('http://${BPEnvironment.BASEURL}/products/$id?populate=Category,Ingredients,Extras'),
       headers: headers,
       body: body
     );
@@ -111,6 +116,12 @@ class ProductsAPIService {
           APIService.data.ingredients.firstWhere((BPIngredient ingredient) => ingredient.ID==ingIDs['id'])
         );
       }
+      List<BPExtra> extras = [];
+      for(var extraIDs in attributes['Extras']['data']){
+        extras.add(
+          APIService.data.extras.firstWhere((extra) => extra.ID==extraIDs['id'])
+        );
+      }
       product.ID = data['id'] as int;
       product.Name = attributes['Name'] as String;
       product.Price = double.parse("${attributes['Price']} " );
@@ -118,6 +129,7 @@ class ProductsAPIService {
       product.Category = APIService.data.categories.firstWhere((BPCategory cat) => cat.ID == attributes['Category']['data']['id']);
       product.Ingredients = ingredients;
       product.Status = ProductStatus.values.byName(attributes['Status'] );
+      product.Extras = extras;
       return APIResponse(
         result.statusCode, 
         "Successfull",

@@ -96,6 +96,10 @@ class ProductSettingsPageState extends State<ProductSettingsPage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: controller.ingredientsChipWidget
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: controller.extraChipWidget
             )
           ],
         )
