@@ -17,7 +17,6 @@ class OrdersAPIService {
   };
   Future<APIResponse> addOrder(BPOrder order) async {
     String body = _orderToJson(order);
-    print(body);
     var response = await http.post(
       Uri.parse('http://localhost:1337/backpoint/createOrder'),
       headers: headers,

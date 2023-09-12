@@ -5,6 +5,8 @@ import 'package:bp_tablet_app/models/product.model.dart';
 import 'package:bp_tablet_app/services/CartService/Cart.service.dart';
 import 'package:flutter/material.dart';
 
+import 'ProductView4OrderResult.enum.dart';
+
 class ProductView4Order extends StatefulWidget {
 
   BPProduct product;
@@ -162,12 +164,9 @@ class _ProductView4OrderState extends State<ProductView4Order> {
     );
   }
   
-  _onSendProductClicked(BuildContext context) {
+  _onSendProductClicked(BuildContext context)async  {
     CartService.addProduct(widget.product, widget.selectedIngredients, widget.selectedExtras);
-    Navigator.of(context).pop();
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => ChooseDeliveryTypeDialog()
-    );
+    Navigator.of(context).pop(OrderResult.Send);
+    
   }
 }

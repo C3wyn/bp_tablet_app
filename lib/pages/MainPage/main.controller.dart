@@ -1,5 +1,6 @@
 import 'package:bp_tablet_app/dialogs/ChooseDeliveryType/ChooseDeliveryType.dialog.dart';
 import 'package:bp_tablet_app/dialogs/OptionsDialog/options.dialog.dart';
+import 'package:bp_tablet_app/dialogs/ProductView4Order/ProductView4OrderResult.enum.dart';
 import 'package:bp_tablet_app/dialogs/ProductView4Order/productView4Order.page.dart';
 import 'package:bp_tablet_app/models/product.model.dart';
 import 'package:bp_tablet_app/pages/ProductSettings/productsettings.page.dart';
@@ -33,12 +34,19 @@ class BPMainPageController {
   }
 
   Future onProductClick(context, product) async {
-    await showDialog<void>(
+    OrderResult? res = await showDialog<OrderResult>(
       builder: (BuildContext context) { 
         return ProductView4Order(product: product);
        }, 
       context: context
     );
+    if(res ==OrderResult.Send) {
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) => const ChooseDeliveryTypeDialog()
+      );
+    }
+    
   }
 
   onSettingsClicked(BuildContext context) {

@@ -57,7 +57,9 @@ class _BPMainPageState extends State<BPMainPage> {
                           )
                         ),
                         onPressed: () async {
+                          print(controller.Products[index].Name);
                           await controller.onProductClick(context, controller.Products[index]);
+                          print(controller.Products);
                           setState((){
                             controller.Products;
                             APIService.data.products;
