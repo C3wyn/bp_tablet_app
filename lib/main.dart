@@ -12,7 +12,8 @@ void main() async {
   final themeStr = await rootBundle.loadString('assets/theme.json');
   final themeJson = jsonDecode(themeStr);
   final theme = ThemeDecoder.decodeThemeData(themeJson)!;
-  runApp(BPTabletApp(theme: theme));
+  SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeRight])
+      .then((value) => runApp(BPTabletApp(theme: theme)));
 }
 class BPTabletApp extends StatelessWidget {
   final ThemeData theme;

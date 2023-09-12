@@ -21,11 +21,11 @@ class BPMainPageController {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(responseProducts.Message))
         );
-      if(responseCategories.isSuccess && responseIngredients.isSuccess && responseProducts.isSuccess){
+      if(responseCategories.isSuccess && responseIngredients.isSuccess && responseProducts.isSuccess && responseExtras.isSuccess){
         _products = APIService.data.products;
         return BPMainPageController();
       }else{
-        await Future.delayed(Duration(seconds: 30));
+        await Future.delayed(const Duration(seconds: 30));
         return gatherData(context);
       }
     }

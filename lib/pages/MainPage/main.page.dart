@@ -59,10 +59,10 @@ class _BPMainPageState extends State<BPMainPage> {
                         onPressed: () async {
                           await controller.onProductClick(context, controller.Products[index]);
                           setState((){
-                          controller.Products;
-                          APIService.data.products;
-                          CartService.currentOrder;
-                        });
+                            controller.Products;
+                            APIService.data.products;
+                            CartService.currentOrder;
+                          });
                         },
                         onLongPress: () => controller.onProductLongPress(context, controller.Products[index]),
                       );

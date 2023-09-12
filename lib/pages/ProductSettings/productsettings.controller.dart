@@ -116,7 +116,6 @@ class ProductSettingsPageController {
     for(BPExtra key in selectedExtras.keys){
       if(selectedExtras[key]!) extrasIDs.add(key.ID);
     }
-    print(extrasIDs);
     if(product==null){
       response = await APIService.addProduct(
         name: nameTIController.text, 

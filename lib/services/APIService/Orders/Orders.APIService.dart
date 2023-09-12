@@ -5,6 +5,7 @@ import 'package:bp_tablet_app/models/Order/order.model.dart';
 import 'package:bp_tablet_app/models/Order/orderdeliverytype.enum.dart';
 import 'package:bp_tablet_app/models/Order/orderitem.model.dart';
 import 'package:bp_tablet_app/models/Order/orderstatus.enum.dart';
+import 'package:bp_tablet_app/models/extra.model.dart';
 import 'package:bp_tablet_app/models/ingredient.model.dart';
 import 'package:bp_tablet_app/services/APIService/Models/apiresponse.model.dart';
 import 'package:bp_tablet_app/services/CartService/Cart.service.dart';
@@ -16,6 +17,7 @@ class OrdersAPIService {
   };
   Future<APIResponse> addOrder(BPOrder order) async {
     String body = _orderToJson(order);
+    print(body);
     var response = await http.post(
       Uri.parse('http://localhost:1337/backpoint/createOrder'),
       headers: headers,
@@ -38,13 +40,24 @@ class OrdersAPIService {
     var items = [];
     for(BPOrderItem item in order.orderItems){
       var ingredients = [];
-      for(BPIngredient ingredient in item.selectedIngredients.keys.where((x) => item.selectedIngredients[x]!)){
-        ingredients.add(ingredient);
+      for(BPIngredient ingredient in item.selectedIngredients.keys.where((x) => !item.selectedIngredients[x]!)){
+        ingredients.add(
+          {
+            "Name": ingredient.Name,
+            "Selected": item.selectedIngredients[ingredient],
+            "Default": true
+          }
+        );
+      }
+      var extras = [];
+      for(BPExtra extra in item.selectedExtras.keys.where((x) => item.selectedExtras[x]!)){
+        extras.add({"Name": extra.Name});
       }
 
       items.add({
         "productID": item.product.ID,
         "selectedIngredients": ingredients,
+        "selectedExtras": extras,
         "customerDescription": item.customerDescription
       });
     }

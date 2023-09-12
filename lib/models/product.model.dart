@@ -60,7 +60,6 @@ class BPProduct implements BackPointModel {
   }
 
   factory BPProduct.fromJson(Map<String, dynamic> json) {
-    print(json);
     var attributes = json['attributes'];
     List<BPIngredient> ingredients = [];
     for(var ingIDs in attributes['Ingredients']['data']){

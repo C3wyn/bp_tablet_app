@@ -97,7 +97,7 @@ class ProductsAPIService {
         "Extras": extras?? []
       }
     });
-    print(body);
+
     var result = await http.put(
       Uri.parse('http://${BPEnvironment.BASEURL}/products/$id?populate=Category,Ingredients,Extras'),
       headers: headers,
