@@ -58,7 +58,8 @@ class BPMainPageController {
       return OptionsDialog<BPProduct>(
         model: product, 
         context: context, 
-        onEditClicked: (con, prod) => _onEditClicked(con, prod)
+        onEditClicked: (con, prod) => _onEditClicked(con, prod),
+        onSelectClicked: (con, prod) => _onSelectClicked(con, prod),
       );
     });
   }
@@ -75,5 +76,10 @@ class BPMainPageController {
       context: context,
       builder: (BuildContext context) => const ChooseDeliveryTypeDialog()
     );
+  }
+  
+  _onSelectClicked(BuildContext con, BPProduct prod) {
+    Navigator.of(con).pop();
+  onProductClick(con, prod);
   }
 }

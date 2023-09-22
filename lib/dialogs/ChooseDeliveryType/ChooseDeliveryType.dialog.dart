@@ -14,16 +14,18 @@ class _ChooseDeliveryTypeDialogState extends State<ChooseDeliveryTypeDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Liefertyp auswählen', style: Theme.of(context).textTheme.headlineLarge),
+      title: const Text('Liefertyp auswählen'),
       content: SizedBox(
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             OutlinedButton(
               onPressed: () => _chooseDeliveryOption(context, OrderDeliveryType.EatHere),
-              child: Column(
+                style: Theme.of(context).outlinedButtonTheme.style,
+                child: Column(
                 children: [
-                  Icon(Icons.home, size: Theme.of(context).textTheme.displayLarge?.fontSize),
-                  Text('Hier essen', style: Theme.of(context).textTheme.headlineLarge)
+                  Icon(Icons.home, size: Theme.of(context).textTheme.displayLarge!.fontSize! * 2.5),
+                  Text('Hier essen', style: Theme.of(context).textTheme.displayLarge)
                 ],
               ),
             ),
@@ -31,8 +33,8 @@ class _ChooseDeliveryTypeDialogState extends State<ChooseDeliveryTypeDialog> {
               onPressed: () => _chooseDeliveryOption(context, OrderDeliveryType.TakeAway),
               child: Column(
                 children: [
-                  Icon(Icons.delivery_dining, size: Theme.of(context).textTheme.displayLarge?.fontSize),
-                  Text('Mitnehmen', style: Theme.of(context).textTheme.headlineLarge)
+                  Icon(Icons.delivery_dining, size: Theme.of(context).textTheme.displayLarge!.fontSize! * 2.5),
+                  Text('Zum Mitnehmen', style: Theme.of(context).textTheme.displayLarge)
                 ],
               ),
             )

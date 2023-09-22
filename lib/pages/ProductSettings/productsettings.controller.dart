@@ -105,7 +105,7 @@ class ProductSettingsPageController {
     );
   }
 
-  void onSave(BuildContext context) async {
+    void _onSave(BuildContext context) async {
     APIResponse response;
 
     List<int> ingredientsIDs = [];
@@ -138,8 +138,46 @@ class ProductSettingsPageController {
         extras: extrasIDs
       );
     }
-
     
+    if(response.isSuccess) Navigator.of(context).pop();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(response.Message))
+    );
+  }
+
+void onSave(BuildContext context) async {
+    APIResponse response;
+
+    List<int> ingredientsIDs = [];
+    for(BPIngredient key in selectedIngredients.keys){
+      if(selectedIngredients[key]!) ingredientsIDs.add(key.ID);
+    }
+    List<int> extrasIDs = [];
+    for(BPExtra key in selectedExtras.keys){
+      if(selectedExtras[key]!) extrasIDs.add(key.ID);
+    }
+    if(product==null){
+      response = await APIService.addProduct(
+        name: nameTIController.text, 
+        price: double.parse((priceTIController.text).substring(0,priceTIController.text.length-1).replaceAll(",", ".")), 
+        category: categoryChipWidget.selectedCategory!, 
+        status: selectedStatus,
+        description: descriptionTIController.text,
+        ingredients: ingredientsIDs,
+        extras: extrasIDs
+      );
+    }else{
+       response = await APIService.updateProduct(
+        id: product!.ID,
+        name: nameTIController.text, 
+        price: double.parse((priceTIController.text).substring(0,priceTIController.text.length-1).replaceAll(",", ".")), 
+        category: categoryChipWidget.selectedCategory!, 
+        status: selectedStatus,
+        description: descriptionTIController.text,
+        ingredients: ingredientsIDs,
+        extras: extrasIDs
+      );
+    }
     
     if(response.isSuccess) Navigator.of(context).pop();
     ScaffoldMessenger.of(context).showSnackBar(

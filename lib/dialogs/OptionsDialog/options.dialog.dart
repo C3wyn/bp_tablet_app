@@ -38,7 +38,8 @@ class OptionsDialog<T> extends StatelessWidget {
     if(fn == null){
       return ListTile(
         leading: icon,
-        title: Text(title)
+        title: Text(title),
+        enabled: false,
       );
     }
     return ListTile(

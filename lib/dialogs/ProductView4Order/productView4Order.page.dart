@@ -48,7 +48,17 @@ class _ProductView4OrderState extends State<ProductView4Order> {
           ],
         )
       ],
-      title: Text(widget.product.Name, style: Theme.of(context).textTheme.displayMedium),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(widget.product.Name, style: Theme.of(context).textTheme.displayMedium),
+          IconButton(
+            icon: const Icon(Icons.cancel_outlined),
+            onPressed: () => Navigator.of(context).pop(),
+            iconSize: 32,
+          )
+        ],
+      ),
       content: SizedBox(
         height: MediaQuery.of(context).size.height, width: MediaQuery.of(context).size.width,
         child: LayoutBuilder(
@@ -57,12 +67,16 @@ class _ProductView4OrderState extends State<ProductView4Order> {
               height: constraints.maxHeight,width: constraints.maxWidth,
               child: Row(
                 children: [
-                  SizedBox(
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white),
+                    ),
                     height: constraints.maxHeight, width: constraints.maxWidth/2,
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
                           Text('Zutaten', style: Theme.of(context).textTheme.displayMedium),
+                          const Divider(),
                           SingleChildScrollView(
                             child: SizedBox(
                               height: constraints.maxHeight,width: constraints.maxWidth/2,
@@ -73,7 +87,10 @@ class _ProductView4OrderState extends State<ProductView4Order> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white),
+                    ),
                     height: constraints.maxHeight, width: constraints.maxWidth/2,
                     child: SingleChildScrollView(
                       child: Column(
@@ -131,7 +148,7 @@ class _ProductView4OrderState extends State<ProductView4Order> {
       shrinkWrap: true,
       itemCount: widget.product.Extras.length,
       prototypeItem: ListTile(
-        title: Text('Extra'),
+        title: const Text('Extra'),
         leading: Switch(
           value: false,
           onChanged: (value) => null,

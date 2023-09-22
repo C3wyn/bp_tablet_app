@@ -71,6 +71,18 @@ class BPTheme {
         )),
         iconSize: MaterialStateProperty.all(24),
       )
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: ButtonStyle(
+        textStyle: MaterialStateProperty.all(TextStyle(
+          fontSize: 24,
+          fontFamily: _bebasFontInstance.fontFamily,
+          letterSpacing: 3,
+          color: Colors.white
+        )),
+        iconSize: MaterialStateProperty.all(24),
+        iconColor: MaterialStateProperty.all(Colors.white)
+      )
     )
   );
 }

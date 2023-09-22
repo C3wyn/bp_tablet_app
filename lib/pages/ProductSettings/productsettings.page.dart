@@ -25,30 +25,34 @@ class ProductSettingsPageState extends State<ProductSettingsPage> {
     controller = ProductSettingsPageController(product: widget.product);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Produkt hinzufügen'),
+        title: Text(widget.product==null?'Produkt hinzufügen': '${widget.product?.Name} bearbeiten'),
         actions: [
-          IconButton(
-            icon: Icon(Icons.save),
+          ElevatedButton.icon(
+            icon: const Icon(Icons.save),
+            label: const Text('Speichern'),
             onPressed: () => controller.onSave(context),
+            style: Theme.of(context).elevatedButtonTheme.style,
           )
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text('Produktinformationen', style: Theme.of(context).textTheme.displayMedium),
+              //Namen Text Feld
+              TextFormField(
                 controller: controller.nameTIController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Name'
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
+              const SizedBox(height: 10),
+              //Beschreibung Text Feld
+              TextFormField(
                 controller: controller.descriptionTIController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
@@ -57,10 +61,9 @@ class ProductSettingsPageState extends State<ProductSettingsPage> {
                 minLines: 1,
                 maxLines: 5
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
+              const SizedBox(height: 10),
+              //Preis Text Feld
+              TextFormField(
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 controller: controller.priceTIController,
                 decoration: const InputDecoration(
@@ -76,10 +79,9 @@ class ProductSettingsPageState extends State<ProductSettingsPage> {
                     ),
                 ],
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: DropdownButtonFormField(
+              const SizedBox(height: 10),
+              //Status Dropdown
+              DropdownButtonFormField(
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Status'
@@ -88,20 +90,17 @@ class ProductSettingsPageState extends State<ProductSettingsPage> {
                 items: controller.generateStatusList(), 
                 onChanged: (ProductStatus? value) { controller.selectedStatus=value!; },
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: controller.categoryChipWidget
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: controller.ingredientsChipWidget
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: controller.extraChipWidget
-            )
-          ],
+              const SizedBox(height: 50),
+              Text('Kategorie auswählen', style: Theme.of(context).textTheme.displayMedium),
+              controller.categoryChipWidget,
+              const SizedBox(height: 50),
+              Text('Zutaten auswählen', style: Theme.of(context).textTheme.displayMedium),
+              controller.ingredientsChipWidget,
+              const SizedBox(height: 50),
+              Text('Extras auswählen', style: Theme.of(context).textTheme.displayMedium),
+              controller.extraChipWidget
+            ],
+          ),
         )
       )
     );
