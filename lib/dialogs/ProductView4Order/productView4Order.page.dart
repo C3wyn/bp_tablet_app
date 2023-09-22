@@ -40,15 +40,15 @@ class _ProductView4OrderState extends State<ProductView4Order> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextButton(
-            child: const Text('Abbrechen'),
+            child: Text('Abbrechen', style: Theme.of(context).textTheme.titleMedium),
             onPressed: () => _onAbortClicked(context),
             ),
-            OutlinedButton(onPressed: () => _onAddMoreClicked(context), child: const Text('Weitere Hinzufügen')),
-            ElevatedButton(onPressed: () => _onSendProductClicked(context), child: const Text('Hinzufügen'))
+            OutlinedButton(onPressed: () => _onAddMoreClicked(context), child: Text('Weitere Hinzufügen', style: Theme.of(context).textTheme.titleMedium)),
+            ElevatedButton.icon(icon: const Icon(Icons.shopping_cart), onPressed: () => _onSendProductClicked(context), style: Theme.of(context).elevatedButtonTheme.style, label: const Text('Bestellen'))
           ],
         )
       ],
-      title: Text(widget.product.Name, style: Theme.of(context).textTheme.headlineMedium),
+      title: Text(widget.product.Name, style: Theme.of(context).textTheme.displayMedium),
       content: SizedBox(
         height: MediaQuery.of(context).size.height, width: MediaQuery.of(context).size.width,
         child: LayoutBuilder(
@@ -62,7 +62,7 @@ class _ProductView4OrderState extends State<ProductView4Order> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          Text('Zutaten', style: Theme.of(context).textTheme.headlineSmall),
+                          Text('Zutaten', style: Theme.of(context).textTheme.displayMedium),
                           SingleChildScrollView(
                             child: SizedBox(
                               height: constraints.maxHeight,width: constraints.maxWidth/2,
@@ -78,7 +78,7 @@ class _ProductView4OrderState extends State<ProductView4Order> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          Text('Extras', style: Theme.of(context).textTheme.headlineSmall),
+                          Text('Extras', style: Theme.of(context).textTheme.displayMedium),
                           SingleChildScrollView(
                             child: SizedBox(
                               height: constraints.maxHeight,width: constraints.maxWidth/2,

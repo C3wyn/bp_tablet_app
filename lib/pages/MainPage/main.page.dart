@@ -36,7 +36,16 @@ class _BPMainPageState extends State<BPMainPage> {
       body: FutureBuilder(
         future: createController,
         builder: (BuildContext builder, AsyncSnapshot snapshot) {
-          if(!snapshot.hasData) return Center(child: CircularProgressIndicator());
+          if(!snapshot.hasData) {
+            return Center(
+              child: Column(
+                children: [
+                  const CircularProgressIndicator(),
+                  Text('Lade Daten...', style: Theme.of(context).textTheme.bodyMedium)
+                ],
+              )
+            );
+          }
           return Row(
             children: [
               SizedBox(
@@ -47,19 +56,19 @@ class _BPMainPageState extends State<BPMainPage> {
                   child: GridView.builder(
                     itemCount: controller.Products.length,
                     itemBuilder: (BuildContext context, int index) { 
-                      return OutlinedButton(
-                        child: Container(
-                          alignment: Alignment.center,
-                          child: Text(
-                            controller.Products[index].Name, 
-                            style: Theme.of(context).textTheme.titleLarge,
-                            textAlign: TextAlign.center,
-                          )
+                      return InkWell(
+                        child: Card(
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: Text(
+                              controller.Products[index].Name, 
+                              style: Theme.of(context).textTheme.titleLarge,
+                              textAlign: TextAlign.center,
+                            )
+                          ),
                         ),
-                        onPressed: () async {
-                          print(controller.Products[index].Name);
+                        onTap: () async {
                           await controller.onProductClick(context, controller.Products[index]);
-                          print(controller.Products);
                           setState((){
                             controller.Products;
                             APIService.data.products;
@@ -85,7 +94,7 @@ class _BPMainPageState extends State<BPMainPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: [
-                      Text('Bestellung', style: Theme.of(context).textTheme.headlineLarge),
+                      Text('Bestellung', style: Theme.of(context).textTheme.displayMedium),
                       const Divider(),
                       Expanded(
                         child: ListView.builder(
@@ -93,20 +102,25 @@ class _BPMainPageState extends State<BPMainPage> {
                           shrinkWrap: true,
                           itemBuilder:(context, index) {
                             return ListTile(
-                              title: Text(CartService.currentOrder.orderItems[index].product.Name),
-                              leading: Text('#${index + 1}')
+                              title: Text(CartService.currentOrder.orderItems[index].product.Name, style: Theme.of(context).textTheme.bodyLarge),
+                              leading: Text('#${index + 1}', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary)),
                             );
                           },
                         ),
                       ),
-                      ElevatedButton(
-                        onPressed: CartService.currentOrder.orderItems.isEmpty? null: () async {
-                          await controller.onSendOrderClicked(context);
-                          setState((){
-                            CartService.currentOrder;
-                          });
-                        }, 
-                        child: Text('Bestellen', style: Theme.of(context).textTheme.bodyLarge)
+                      Padding(
+                        padding: const EdgeInsets.all(32.0),
+                        child: ElevatedButton.icon(
+                          icon: const Icon(Icons.shopping_cart),
+                          onPressed: CartService.currentOrder.orderItems.isEmpty? null: () async {
+                            await controller.onSendOrderClicked(context);
+                            setState((){
+                              CartService.currentOrder;
+                            });
+                          }, 
+                          label: const Text('Bestellen'),
+                          style: Theme.of(context).elevatedButtonTheme.style
+                        ),
                       )
                     ],
                   ),

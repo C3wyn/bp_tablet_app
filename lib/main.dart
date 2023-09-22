@@ -9,22 +9,18 @@ import 'package:json_theme/json_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final themeStr = await rootBundle.loadString('assets/theme.json');
-  final themeJson = jsonDecode(themeStr);
-  final theme = ThemeDecoder.decodeThemeData(themeJson)!;
   SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeRight])
-      .then((value) => runApp(BPTabletApp(theme: theme)));
+      .then((value) => runApp(BPTabletApp()));
 }
 class BPTabletApp extends StatelessWidget {
-  final ThemeData theme;
   const BPTabletApp
-({super.key, required this.theme});
+({super.key});
 
   @override
   Widget build(BuildContext context) {
     
     return MaterialApp(
-      theme: theme,
+      theme: BPTheme.themeData,
       initialRoute: '/',
       routes: {
         '/': (context) => BPMainPage(),
