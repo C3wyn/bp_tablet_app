@@ -8,7 +8,7 @@ class BPTheme {
     );
 
   static final _bebasFontInstance = GoogleFonts.bebasNeue();
-  static final _saFontInstance = GoogleFonts.eduSaBeginner();
+  static final _saFontInstance = GoogleFonts.montserrat();
   static final themeData = ThemeData(
     brightness: Brightness.dark, // Dark theme
     primaryColor: customColorScheme.primary,        
@@ -83,6 +83,26 @@ class BPTheme {
         iconSize: MaterialStateProperty.all(24),
         iconColor: MaterialStateProperty.all(Colors.white)
       )
-    )
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: ButtonStyle(
+        textStyle: MaterialStateProperty.all(TextStyle(
+          fontSize: 24,
+          fontFamily: _bebasFontInstance.fontFamily,
+          letterSpacing: 3,
+          color: Colors.white
+        )),
+        iconSize: MaterialStateProperty.all(24),
+        iconColor: MaterialStateProperty.all(Colors.white)
+      )
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      labelStyle: TextStyle(
+        fontSize: 24,
+        fontFamily: _bebasFontInstance.fontFamily,
+        letterSpacing: 3,
+        color: Colors.white
+      ),
+    ),
   );
 }

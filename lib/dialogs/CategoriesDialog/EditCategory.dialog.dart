@@ -33,9 +33,10 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Kategorie'),
+      title: widget.category==null? const Text('Kategorie hinzufügen'): Text('Kategorie: ${widget.category!.Name} bearbeiten'),
       content: Column(
         children: [
+          /*
           InkWell(
             child: const Column(
               children: [
@@ -45,8 +46,14 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
             ),
             onTap: () => _onFileUplaodClick(),
           ),
+          */
           TextFormField(
             controller: _categoryNameController,
+            decoration: InputDecoration(
+              labelText: 'Name',
+              labelStyle: Theme.of(context).inputDecorationTheme.labelStyle
+            ),
+            style: Theme.of(context).textTheme.bodyLarge,
           )
         ],
       ),
@@ -55,21 +62,22 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
           child: const Text('Abbrechen'),
           onPressed: () => _onAbortClicked(context),
         ),
-        ElevatedButton(
+        ElevatedButton.icon(
+          icon: const Icon(Icons.save),
           onPressed: () => _onSaveClicked(context), 
-          child: const Text('Speichern')
+          label: const Text('Speichern')
         )
       ],
     );
   }
-  
+  /*
   _onFileUplaodClick() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if(result != null){
       file = result.files.single;
     }
   }
-  
+  */
   _onSaveClicked(BuildContext context) async {
     APIResponse response;
     if(widget.category==null){

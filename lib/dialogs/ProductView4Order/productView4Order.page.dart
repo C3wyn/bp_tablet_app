@@ -40,7 +40,7 @@ class _ProductView4OrderState extends State<ProductView4Order> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextButton(
-            child: Text('Abbrechen', style: Theme.of(context).textTheme.titleMedium),
+            child: Text('Abbrechen'),
             onPressed: () => _onAbortClicked(context),
             ),
             OutlinedButton(onPressed: () => _onAddMoreClicked(context), child: Text('Weitere Hinzufügen', style: Theme.of(context).textTheme.titleMedium)),
