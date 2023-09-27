@@ -64,6 +64,7 @@ class APIService {
       List<int>? ingredients,
       List<int>? extras
     }) => _handleErrors(_productsService.updateProduct(id, name, price, category, status, description, ingredients, extras));
+  static Future<APIResponse> deleteProduct(BPProduct product) async => _handleErrors(_productsService.deleteProduct(product));
 
 
   static Future<APIResponse> addOrder(BPOrder order) => _handleErrors(_orderService.addOrder(order));

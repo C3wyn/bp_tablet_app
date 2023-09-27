@@ -26,10 +26,16 @@ class _EditExtrasDialogState extends State<EditExtrasDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-       title: Text(widget.extra!=null? '${widget.extra} bearbeiten': 'Extra hinzufügen'),
+       title: Text(widget.extra!=null? '${widget.extra?.Name} bearbeiten': 'Extra hinzufügen'),
        content: Column(
+        mainAxisSize: MainAxisSize.min,
          children: [
            TextFormField(
+            decoration: InputDecoration(
+              labelText: 'Name',
+              labelStyle: Theme.of(context).inputDecorationTheme.labelStyle
+            ),
+            style: Theme.of(context).textTheme.bodyLarge,
              controller: _InpNameController
            )
          ],

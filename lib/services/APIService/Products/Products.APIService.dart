@@ -26,12 +26,12 @@ class ProductsAPIService {
     for(Map<String, dynamic> obj in data){
       result.add(BPProduct.fromJson(obj)); 
     }
-
-    if(data.isNotEmpty) {
-      APIService.data.products = result;
+    APIService.data.products = result;
+    if(response.statusCode==200) {
+      
       return APIResponse(200, "Successfull", "Alle Produkte erfolgreich erhalten", result);
     };
-    return APIResponse(500, "Fehlgeschlagen", "Es ist ein Fehler aufgetreten", null);
+    return APIResponse(500, "Fehlgeschlagen", "Es ist ein Fehler aufgetreten (PRO)", null);
   }
   
   Future<APIResponse> addProduct(
@@ -138,5 +138,17 @@ class ProductsAPIService {
       );
     }
     throw Error();
+  }
+
+  Future<APIResponse> deleteProduct(BPProduct product) async {
+    var result = await http.delete(
+      Uri.parse('http://${BPEnvironment.BASEURL}/products/${product.ID}'),
+      headers: headers
+    );
+    var response = APIResponse.fromJson(result.body);
+
+    if(result.statusCode == 200) APIService.data.products.remove(product);
+
+    return response;
   }
 }

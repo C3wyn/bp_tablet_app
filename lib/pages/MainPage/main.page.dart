@@ -16,7 +16,7 @@ class _BPMainPageState extends State<BPMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    var createController = controller.gatherData(context);
+    var createController = controller.gatherData(context, setState);
 
     return Scaffold(
       appBar: AppBar(
@@ -46,7 +46,11 @@ class _BPMainPageState extends State<BPMainPage> {
               )
             );
           }
-          return Row(
+          return APIService.data.products.isEmpty? 
+          const Center(
+            child: Text('Keine Produkte gefunden')
+          ): 
+          Row(
             children: [
               SizedBox(
                 height: MediaQuery.of(context).size.height,

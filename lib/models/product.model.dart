@@ -75,13 +75,18 @@ class BPProduct implements BackPointModel {
         );
       }
     }
-    
+    BPCategory? category;
+    try {
+      category = APIService.data.categories.firstWhere((BPCategory cat) => cat.ID == attributes['Category']['data']['id']);
+    } catch (e) {
+      category = null;
+    }
     return BPProduct(
       id: json['id'] as int,
       name: attributes['Name'] as String,
       price: double.parse("${attributes['Price']} " ),
       description: attributes['Description'] ,
-      category: APIService.data.categories.firstWhere((BPCategory cat) => cat.ID == attributes['Category']['data']['id']),
+      category: category,
       ingredients: ingredients,
       status: ProductStatus.values.byName(attributes['Status'] ) ,
       extras: extras

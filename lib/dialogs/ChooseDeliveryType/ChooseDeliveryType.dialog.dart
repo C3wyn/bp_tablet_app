@@ -15,29 +15,34 @@ class _ChooseDeliveryTypeDialogState extends State<ChooseDeliveryTypeDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('Liefertyp auswählen'),
-      content: SizedBox(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+      content: Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            OutlinedButton(
-              onPressed: () => _chooseDeliveryOption(context, OrderDeliveryType.EatHere),
-                style: Theme.of(context).outlinedButtonTheme.style,
-                child: Column(
-                children: [
-                  Icon(Icons.home, size: Theme.of(context).textTheme.displayLarge!.fontSize! * 2.5),
-                  Text('Hier essen', style: Theme.of(context).textTheme.displayLarge)
-                ],
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                OutlinedButton(
+                  onPressed: () => _chooseDeliveryOption(context, OrderDeliveryType.EatHere),
+                    style: Theme.of(context).outlinedButtonTheme.style,
+                    child: Column(
+                    children: [
+                      Icon(Icons.home, size: Theme.of(context).textTheme.displayLarge!.fontSize! * 2.5),
+                      Text('Hier essen', style: Theme.of(context).textTheme.displayLarge)
+                    ],
+                  ),
+                ),
+                OutlinedButton(
+                  onPressed: () => _chooseDeliveryOption(context, OrderDeliveryType.TakeAway),
+                  child: Column(
+                    children: [
+                      Icon(Icons.delivery_dining, size: Theme.of(context).textTheme.displayLarge!.fontSize! * 2.5),
+                      Text('Zum Mitnehmen', style: Theme.of(context).textTheme.displayLarge)
+                    ],
+                  ),
+                )
+              ],
             ),
-            OutlinedButton(
-              onPressed: () => _chooseDeliveryOption(context, OrderDeliveryType.TakeAway),
-              child: Column(
-                children: [
-                  Icon(Icons.delivery_dining, size: Theme.of(context).textTheme.displayLarge!.fontSize! * 2.5),
-                  Text('Zum Mitnehmen', style: Theme.of(context).textTheme.displayLarge)
-                ],
-              ),
-            )
           ],
         ),
       )

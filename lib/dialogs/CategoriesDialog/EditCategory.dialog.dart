@@ -35,6 +35,7 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
     return AlertDialog(
       title: widget.category==null? const Text('Kategorie hinzufügen'): Text('Kategorie: ${widget.category!.Name} bearbeiten'),
       content: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           /*
           InkWell(

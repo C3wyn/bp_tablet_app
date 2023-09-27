@@ -22,9 +22,9 @@ class IngredientsAPIService {
     for(var obj in data){
       result.add(BPIngredient.fromJson(obj['id'], obj['attributes']));
     }
-    
-    if(data.isNotEmpty) {
-      APIService.data.ingredients = result;
+    APIService.data.ingredients = result;
+    if(response.statusCode==200) {
+      
       return APIResponse<List<BPIngredient>>(200, "Successfull", "Alle Produkte erfolgreich erhalten", result);
     };
     return APIResponse<List<BPIngredient>>(500, "Fehlgeschlagen", "Es ist ein Fehler aufgetreten", null);

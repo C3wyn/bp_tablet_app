@@ -25,11 +25,17 @@ class _EditIngredientsDialogState extends State<EditIngredientsDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-       title: Text(widget.ingredient!=null? '${widget.ingredient} bearbeiten': 'Zutat hinzufügen'),
+       title: Text(widget.ingredient!=null? '${widget.ingredient?.Name} bearbeiten': 'Zutat hinzufügen'),
        content: Column(
+        mainAxisSize: MainAxisSize.min,
          children: [
            TextFormField(
-             controller: _InpNameController
+            decoration: InputDecoration(
+              labelText: 'Name',
+              labelStyle: Theme.of(context).inputDecorationTheme.labelStyle
+            ),
+            style: Theme.of(context).textTheme.bodyLarge,
+            controller: _InpNameController
            )
          ],
        ),

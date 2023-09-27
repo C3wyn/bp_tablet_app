@@ -14,6 +14,8 @@ import '../../services/APIService/Models/apiresponse.model.dart';
 
 class ProductSettingsPageController {
 
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   BPProduct? product;
 
   final TextEditingController nameTIController = TextEditingController();
@@ -22,7 +24,7 @@ class ProductSettingsPageController {
 
   final TextEditingController priceTIController = TextEditingController();
 
-  ProductStatus selectedStatus = ProductStatus.None;
+  ProductStatus selectedStatus = ProductStatus.Available;
 
   late IngredientsChips ingredientsChipWidget;
   late CategoryChipList categoryChipWidget;
@@ -107,7 +109,6 @@ class ProductSettingsPageController {
 
     void _onSave(BuildContext context) async {
     APIResponse response;
-
     List<int> ingredientsIDs = [];
     for(BPIngredient key in selectedIngredients.keys){
       if(selectedIngredients[key]!) ingredientsIDs.add(key.ID);
@@ -145,7 +146,9 @@ class ProductSettingsPageController {
     );
   }
 
-void onSave(BuildContext context) async {
+
+
+  void onSave(BuildContext context) async {
     APIResponse response;
 
     List<int> ingredientsIDs = [];

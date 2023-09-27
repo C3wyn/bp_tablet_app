@@ -1,4 +1,5 @@
 import 'package:bp_tablet_app/dialogs/ChooseDeliveryType/ChooseDeliveryType.dialog.dart';
+import 'package:bp_tablet_app/dialogs/DeleteDialog/delete.dialog.dart';
 import 'package:bp_tablet_app/dialogs/OptionsDialog/options.dialog.dart';
 import 'package:bp_tablet_app/dialogs/ProductView4Order/ProductView4OrderResult.enum.dart';
 import 'package:bp_tablet_app/dialogs/ProductView4Order/productView4Order.page.dart';
@@ -13,22 +14,25 @@ class BPMainPageController {
   List<BPProduct> _products = [];
   List<BPProduct> get Products => _products;
 
-  Future<BPMainPageController> gatherData(BuildContext context) async {
+  late Function setState;
+
+  Future<BPMainPageController> gatherData(BuildContext context, Function setState) async {
+    setState = setState;
     if(_products.isEmpty){
       var responseIngredients = await APIService.getIngredients();
       var responseCategories = await APIService.getCategories();
       var responseProducts = await APIService.getProducts();
       var responseExtras = await APIService.getExtras();
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(responseProducts.Message))
-        );
-      if(responseCategories.isSuccess && responseIngredients.isSuccess && responseProducts.isSuccess && responseExtras.isSuccess){
+        SnackBar(content: Text(responseProducts.Message))
+      );
+
+      if(!responseProducts.isSuccess){
+        await Future.delayed(const Duration(seconds: 30));
+        return gatherData(context, setState);
+      }
         _products = APIService.data.products;
         return BPMainPageController();
-      }else{
-        await Future.delayed(const Duration(seconds: 30));
-        return gatherData(context);
-      }
     }
     return BPMainPageController();
   }
@@ -60,6 +64,7 @@ class BPMainPageController {
         context: context, 
         onEditClicked: (con, prod) => _onEditClicked(con, prod),
         onSelectClicked: (con, prod) => _onSelectClicked(con, prod),
+        onDeleteClicked: (con, prod) => _onDeleteClicked(con, prod),
       );
     });
   }
@@ -80,6 +85,16 @@ class BPMainPageController {
   
   _onSelectClicked(BuildContext con, BPProduct prod) {
     Navigator.of(con).pop();
-  onProductClick(con, prod);
+    onProductClick(con, prod);
+  }
+  
+  _onDeleteClicked(BuildContext con, BPProduct prod) async {
+    Navigator.of(con).pop();
+    await showDialog(context: con, builder: (_) => BPDeleteDialog(
+      message: 'Möchtest du das Produkt ${prod.Name}(ID: ${prod.ID}) unwiederruflich löschen?', 
+      title: 'Produkt löschen', 
+      onDeletePressed: () => APIService.deleteProduct(prod)
+      )
+    );
   }
 }

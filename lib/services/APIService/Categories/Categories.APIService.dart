@@ -23,8 +23,8 @@ class CategoriesAPIService {
     for(var obj in data){
       result.add(BPCategory.fromJson(obj['id'], obj['attributes']));
     }
-    if(data.isNotEmpty) {
-      APIService.data.categories = result;
+    APIService.data.categories = result;
+    if(response.statusCode==200) {
       return APIResponse<List<BPCategory>>(200, "Successfull", "Alle Produkte erfolgreich erhalten", result);
     };
     return APIResponse(500, "Fehlgeschlagen", "Es ist ein Fehler aufgetreten", null);
