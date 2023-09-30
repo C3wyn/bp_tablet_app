@@ -2,6 +2,7 @@ import 'package:bp_tablet_app/models/ingredient.model.dart';
 import 'package:bp_tablet_app/models/product.model.dart';
 import 'package:bp_tablet_app/pages/ProductSettings/IngredientsChips/IngredientsChipList.widget.dart';
 import 'package:bp_tablet_app/pages/ProductSettings/productsettings.controller.dart';
+import 'package:bp_tablet_app/services/APIService/APIService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

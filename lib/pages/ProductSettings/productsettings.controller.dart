@@ -106,7 +106,7 @@ class ProductSettingsPageController {
 
   void _onSave(BuildContext context) async {
     APIResponse response;
-    List<int> ingredientsIDs = [];
+    List<String> ingredientsIDs = [];
     for (BPIngredient key in selectedIngredients.keys) {
       if (selectedIngredients[key]!) ingredientsIDs.add(key.ID);
     }
@@ -147,7 +147,7 @@ class ProductSettingsPageController {
   void onSave(BuildContext context) async {
     APIResponse response;
 
-    List<int> ingredientsIDs = [];
+    List<String> ingredientsIDs = [];
     for (BPIngredient key in selectedIngredients.keys) {
       if (selectedIngredients[key]!) ingredientsIDs.add(key.ID);
     }

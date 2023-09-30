@@ -20,28 +20,25 @@ class ExtrasAPIService {
   Future<APIResponse<List<BPExtra>?>> getExtras() async {
     var response =
         await http.get(Uri.parse('http://${BPEnvironment.BASEURL}/extras'));
-    List<dynamic> data = jsonDecode(response.body)['data'];
+    List<dynamic> data = jsonDecode(response.body);
     List<BPExtra> result = [];
     for (var obj in data) {
       result.add(BPExtra.fromJson(obj));
     }
     APIService.data.extras = result;
-    if (data.isNotEmpty) {
+    if (response.statusCode == 200) {
       return APIResponse<List<BPExtra>>(
           200, "Successfull", "Alle Extras erfolgreich erhalten", result);
     }
-    ;
-    return APIResponse(
-        500, "Fehlgeschlagen", "Es ist ein Fehler aufgetreten", null);
+    return APIResponse<List<BPExtra>>(
+        response.statusCode, 'Fehler', "Fehler beim erhalten der Extras", null);
   }
 
   Future<APIResponse> addExtra(String name) async {
-    String body = jsonEncode({
-      "data": {"Name": name}
-    });
+    String body = jsonEncode({"Name": name});
 
     var response = await http.post(
-        Uri.parse('http://${BPEnvironment.BASEURL}/extras'),
+        Uri.parse('http://${BPEnvironment.BASEURL}/extra'),
         headers: headers,
         body: body);
     Map<String, dynamic> data = jsonDecode(response.body);
@@ -50,23 +47,15 @@ class ExtrasAPIService {
       return APIResponse(
           200, "Successfull", "Extra erfolgreich hinzugefügt", null);
     }
-    if (data['data'] != null) {
-      BPExtra newextra = BPExtra.fromJson(data['data']);
-      APIService.data.extras.add(newextra);
-      return APIResponse(
-          200, "Successfull", "Extra erfolgreich hinzugefügt", newextra);
-    }
     return APIResponse(data['error']['status'], data['error']['name'],
         data['error']['message'], null);
   }
 
   Future<APIResponse> updateExtra(BPExtra extra, {required String name}) async {
     var result = await http.put(
-        Uri.parse('http://${BPEnvironment.BASEURL}/extras/${extra.ID}'),
+        Uri.parse('http://${BPEnvironment.BASEURL}/extra/${extra.ID}'),
         headers: headers,
-        body: jsonEncode({
-          "data": {"Name": name}
-        }));
+        body: jsonEncode({"Name": name}));
 
     APIResponse response = APIResponse.fromJson(result.body);
     if (response.isSuccess) extra.Name = name;
@@ -75,7 +64,7 @@ class ExtrasAPIService {
 
   Future<APIResponse> deleteExtra(BPExtra extra) async {
     var result = await http.delete(
-        Uri.parse('http://${BPEnvironment.BASEURL}/extras/${extra.ID}'),
+        Uri.parse('http://${BPEnvironment.BASEURL}/extra/${extra.ID}'),
         headers: headers);
     var response = APIResponse.fromJson(result.body);
 

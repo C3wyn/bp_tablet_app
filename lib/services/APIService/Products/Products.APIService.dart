@@ -45,7 +45,7 @@ class ProductsAPIService {
       required BPCategory category,
       required ProductStatus status,
       String? description,
-      List<int>? ingredients,
+      List<String>? ingredients,
       List<String>? extras}) async {
     String body = jsonEncode({
       "data": {
@@ -67,13 +67,10 @@ class ProductsAPIService {
 
     Map<String, dynamic> data = jsonDecode(response.body);
     if (data['data'] != null) {
-      APIService.data.products.add(BPProduct.fromJson(data['data']));
+      var newProduct = BPProduct.fromJson(data['data']);
+      APIService.data.products.add(newProduct);
       return APIResponse(
-          200,
-          "Successfull",
-          "Produkt erfolgreich hinzugefügt",
-          BPIngredient.fromJson(
-              data['data']['id'], data['data']['attributes']));
+          200, "Successfull", "Produkt erfolgreich hinzugefügt", newProduct);
     }
     return APIResponse(data['error']['status'], data['error']['name'],
         data['error']['message'], null);
@@ -104,7 +101,7 @@ class ProductsAPIService {
       BPCategory category,
       ProductStatus status,
       String? description,
-      List<int>? ingredients,
+      List<String>? ingredients,
       List<String>? extras) async {
     String body = jsonEncode({
       "data": {

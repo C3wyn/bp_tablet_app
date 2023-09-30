@@ -52,7 +52,7 @@ class APIService {
           required BPCategory category,
           required ProductStatus status,
           String? description,
-          List<int>? ingredients,
+          List<String>? ingredients,
           List<String>? extras}) =>
       _handleErrors(_productsService.addProduct(
           name: name,
@@ -69,7 +69,7 @@ class APIService {
           required BPCategory category,
           required ProductStatus status,
           String? description,
-          List<int>? ingredients,
+          List<String>? ingredients,
           List<String>? extras}) =>
       _handleErrors(_productsService.updateProduct(
           id, name, price, category, status, description, ingredients, extras));

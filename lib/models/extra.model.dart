@@ -10,13 +10,10 @@ class BPExtra implements BackPointModel {
   });
 
   factory BPExtra.fromJson(Map<String, dynamic> json) {
-    if (isMapInExpectedFormat(json)) {
-      return BPExtra(
-        ID: json['id'],
-        Name: json['attributes']['Name'],
-      );
-    }
-    throw Exception("Map is not in the expected format");
+    return BPExtra(
+      ID: json['_id'],
+      Name: json['Name'],
+    );
   }
 
   static bool isMapInExpectedFormat(Map<String, dynamic> inputMap) {

@@ -3,8 +3,7 @@ import 'dart:convert';
 import 'package:bp_tablet_app/models/bpmodel.model.dart';
 
 class BPIngredient implements BackPointModel {
-  int _id = -1;
-  int get ID => _id;
+  late String ID;
 
   late String _name;
 
@@ -14,29 +13,12 @@ class BPIngredient implements BackPointModel {
     _name = value;
   }
 
-  BPIngredient(
-    int id,
-    String name
-  ){
-    _id = id;
+  BPIngredient(String id, String name) {
+    ID = id;
     _name = name;
   }
 
-  String toJson(
-    {
-      String? newName
-    }
-  ) {
-    return jsonEncode({
-      "ID": _id,
-      "Name": newName?? _name
-    });
-  }
-
-  factory BPIngredient.fromJson(int id, Map<String,dynamic> json) {
-    return BPIngredient(
-      id,
-      json['Name'] as String
-    );
+  factory BPIngredient.fromJson(Map<String, dynamic> json) {
+    return BPIngredient(json['_id'], json['Name'] as String);
   }
 }
