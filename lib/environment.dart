@@ -1,3 +1,3 @@
 class BPEnvironment {
-  static const BASEURL = "localhost:1337/api";
+  static const BASEURL = "localhost:3000";
 }
