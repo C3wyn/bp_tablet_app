@@ -7,7 +7,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class EditCategoryDialog extends StatefulWidget {
-
   BPCategory? category;
 
   EditCategoryDialog({super.key, this.category});
@@ -17,7 +16,6 @@ class EditCategoryDialog extends StatefulWidget {
 }
 
 class _EditCategoryDialogState extends State<EditCategoryDialog> {
-
   final TextEditingController _categoryNameController = TextEditingController();
 
   PlatformFile? file;
@@ -25,7 +23,7 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
   @override
   void initState() {
     super.initState();
-    if(widget.category!=null){
+    if (widget.category != null) {
       _categoryNameController.text = widget.category!.Name;
     }
   }
@@ -33,7 +31,9 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: widget.category==null? const Text('Kategorie hinzufügen'): Text('Kategorie: ${widget.category!.Name} bearbeiten'),
+      title: widget.category == null
+          ? const Text('Kategorie hinzufügen')
+          : Text('Kategorie: ${widget.category!.Name} bearbeiten'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -51,9 +51,8 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
           TextFormField(
             controller: _categoryNameController,
             decoration: InputDecoration(
-              labelText: 'Name',
-              labelStyle: Theme.of(context).inputDecorationTheme.labelStyle
-            ),
+                labelText: 'Name',
+                labelStyle: Theme.of(context).inputDecorationTheme.labelStyle),
             style: Theme.of(context).textTheme.bodyLarge,
           )
         ],
@@ -64,13 +63,13 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
           onPressed: () => _onAbortClicked(context),
         ),
         ElevatedButton.icon(
-          icon: const Icon(Icons.save),
-          onPressed: () => _onSaveClicked(context), 
-          label: const Text('Speichern')
-        )
+            icon: const Icon(Icons.save),
+            onPressed: () => _onSaveClicked(context),
+            label: const Text('Speichern'))
       ],
     );
   }
+
   /*
   _onFileUplaodClick() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
@@ -81,21 +80,21 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
   */
   _onSaveClicked(BuildContext context) async {
     APIResponse response;
-    if(widget.category==null){
-      response = await APIService.addCategory(_categoryNameController.text, file);
-    }else{
-      response = await APIService.updateCategory(widget.category!, name: _categoryNameController.text);
+    if (widget.category == null) {
+      response = await APIService.addCategory(_categoryNameController.text);
+    } else {
+      response = await APIService.updateCategory(widget.category!,
+          name: _categoryNameController.text);
     }
     Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(response.Message))
-    );
-    
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(response.Message)));
+
     setState(() {
       widget.category;
     });
   }
-  
+
   _onAbortClicked(BuildContext context) {
     Navigator.of(context).pop();
   }

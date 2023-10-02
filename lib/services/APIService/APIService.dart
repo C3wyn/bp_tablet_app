@@ -11,7 +11,6 @@ import 'package:bp_tablet_app/services/APIService/Ingredients/Ingredients.APISer
 import 'package:bp_tablet_app/services/APIService/Models/apiresponse.model.dart';
 import 'package:bp_tablet_app/services/APIService/Orders/Orders.APIService.dart';
 import 'package:bp_tablet_app/services/APIService/Products/Products.APIService.dart';
-import 'package:file_picker/file_picker.dart';
 
 class APIService {
   static final CategoriesAPIService _categoriesService = CategoriesAPIService();
@@ -36,9 +35,8 @@ class APIService {
   static Future<APIResponse<List<BPCategory>?>> getCategories() =>
       _handleErrors(_categoriesService.getCategories());
 
-  static Future<APIResponse> addCategory(
-          String name, PlatformFile? file) async =>
-      _handleErrors(_categoriesService.addCategory(name, file));
+  static Future<APIResponse> addCategory(String name) async =>
+      _handleErrors(_categoriesService.addCategory(name));
   static Future<APIResponse> updateCategory(BPCategory bpCategory,
           {required String name}) async =>
       _handleErrors(_categoriesService.updateCategory(bpCategory, name));
@@ -49,7 +47,7 @@ class APIService {
   static Future<APIResponse> addProduct(
           {required String name,
           required double price,
-          required BPCategory category,
+          required BPCategory? category,
           required ProductStatus status,
           String? description,
           List<String>? ingredients,
@@ -63,23 +61,24 @@ class APIService {
           ingredients: ingredients,
           extras: extras));
   static Future<APIResponse> updateProduct(
-          {required int id,
+          {required String id,
           required String name,
           required double price,
           required BPCategory category,
           required ProductStatus status,
           String? description,
-          List<String>? ingredients,
-          List<String>? extras}) =>
+          List<BPIngredient>? ingredients,
+          List<BPExtra>? extras}) =>
       _handleErrors(_productsService.updateProduct(
-          id, name, price, category, status, description, ingredients, extras));
+          id, name, price, status, category, description, ingredients, extras));
   static Future<APIResponse> deleteProduct(BPProduct product) async =>
       _handleErrors(_productsService.deleteProduct(product));
 
   static Future<APIResponse> addOrder(BPOrder order) =>
       _handleErrors(_orderService.addOrder(order));
 
-  static Future<APIResponse> getExtras() => _extrasService.getExtras();
+  static Future<APIResponse> getExtras() =>
+      _handleErrors<List<BPExtra>?>(_extrasService.getExtras());
   static Future<APIResponse> addExtra(String name) async =>
       _handleErrors(_extrasService.addExtra(name));
   static Future<APIResponse> updateExtra(BPExtra,
@@ -92,8 +91,7 @@ class APIService {
       Future<APIResponse<t>> next) async {
     try {
       var response = await next;
-      if (response.isSuccess) return response;
-      throw Error();
+      return response;
     } catch (error) {
       print(error);
       return APIResponse(500, "Fehlgeschlagen", error.toString(), null);

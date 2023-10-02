@@ -37,7 +37,7 @@ class IngredientsAPIService {
     String body = jsonEncode({"Name": name});
 
     var response = await http.post(
-        Uri.parse('http://${BPEnvironment.BASEURL}/ingredients'),
+        Uri.parse('http://${BPEnvironment.BASEURL}/ingredient'),
         headers: headers,
         body: body);
     Map<String, dynamic> data = jsonDecode(response.body);
@@ -55,7 +55,7 @@ class IngredientsAPIService {
       {required String name}) async {
     var result = await http.put(
         Uri.parse(
-            'http://${BPEnvironment.BASEURL}/ingredients/${updatedIngredient.ID}'),
+            'http://${BPEnvironment.BASEURL}/ingredient/${updatedIngredient.ID}'),
         headers: headers,
         body: jsonEncode({"Name": name}));
 
@@ -67,7 +67,7 @@ class IngredientsAPIService {
   Future<APIResponse> deleteIngredient(BPIngredient ingredient) async {
     var result = await http.delete(
         Uri.parse(
-            'http://${BPEnvironment.BASEURL}/ingredients/${ingredient.ID}'),
+            'http://${BPEnvironment.BASEURL}/ingredient/${ingredient.ID}'),
         headers: headers);
     var response = APIResponse.fromJson(result.body);
 

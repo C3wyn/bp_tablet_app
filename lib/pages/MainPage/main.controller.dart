@@ -13,17 +13,15 @@ class BPMainPageController {
   List<BPProduct> _products = [];
   List<BPProduct> get Products => _products;
 
-  late Function setState;
-
   Future<BPMainPageController> gatherData(
       BuildContext context, Function setState) async {
     setState = setState;
     if (_products.isEmpty) {
       var responseIngredients = await APIService.getIngredients();
       var responseCategories = await APIService.getCategories();
-      var responseProducts = await APIService.getProducts();
       var responseExtras = await APIService.getExtras();
-      print(responseExtras);
+      var responseProducts = await APIService.getProducts();
+
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(responseProducts.Message)));
 
@@ -54,7 +52,8 @@ class BPMainPageController {
     Navigator.of(context).pushNamed('/product');
   }
 
-  onProductLongPress(BuildContext context, BPProduct product) {
+  onProductLongPress(
+      BuildContext context, BPProduct product, Function setState) {
     showModalBottomSheet(
         context: context,
         builder: (builder) {
@@ -63,7 +62,8 @@ class BPMainPageController {
             context: context,
             onEditClicked: (con, prod) => _onEditClicked(con, prod),
             onSelectClicked: (con, prod) => _onSelectClicked(con, prod),
-            onDeleteClicked: (con, prod) => _onDeleteClicked(con, prod),
+            onDeleteClicked: (con, prod) =>
+                _onDeleteClicked(con, prod, setState),
           );
         });
   }
@@ -88,7 +88,7 @@ class BPMainPageController {
     onProductClick(con, prod);
   }
 
-  _onDeleteClicked(BuildContext con, BPProduct prod) async {
+  _onDeleteClicked(BuildContext con, BPProduct prod, Function setState) async {
     Navigator.of(con).pop();
     await showDialog(
         context: con,
@@ -96,6 +96,19 @@ class BPMainPageController {
             message:
                 'Möchtest du das Produkt ${prod.Name}(ID: ${prod.ID}) unwiederruflich löschen?',
             title: 'Produkt löschen',
-            onDeletePressed: () => APIService.deleteProduct(prod)));
+            onDeletePressed: () => _deleteProduct(prod, con, setState)));
+  }
+
+  _deleteProduct(
+      BPProduct product, BuildContext context, Function setState) async {
+    APIResponse response = await APIService.deleteProduct(product);
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(response.Message)));
+    if (response.isSuccess) {
+      Navigator.of(context).pop();
+      setState(() {
+        _products = APIService.data.products;
+      });
+    }
   }
 }

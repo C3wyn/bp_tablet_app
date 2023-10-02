@@ -1,11 +1,7 @@
 import 'dart:convert';
-
-import 'package:bp_tablet_app/models/category.model.dart';
 import 'package:bp_tablet_app/models/extra.model.dart';
-import 'package:bp_tablet_app/models/ingredient.model.dart';
 import 'package:bp_tablet_app/services/APIService/APIService.dart';
 import 'package:bp_tablet_app/services/APIService/Models/apiresponse.model.dart';
-import 'package:file_picker/file_picker.dart';
 
 import '../../../environment.dart';
 import 'package:http/http.dart' as http;
@@ -25,6 +21,7 @@ class ExtrasAPIService {
     for (var obj in data) {
       result.add(BPExtra.fromJson(obj));
     }
+    print(result);
     APIService.data.extras = result;
     if (response.statusCode == 200) {
       return APIResponse<List<BPExtra>>(

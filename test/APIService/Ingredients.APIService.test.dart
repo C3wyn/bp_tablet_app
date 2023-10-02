@@ -5,7 +5,7 @@ import 'package:bp_tablet_app/services/APIService/Ingredients/Ingredients.APISer
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bp_tablet_app/services/APIService/Extras/Extras.APIService.dart';
 
-void main() {
+void TestIngredientsAPIService() {
   group('IngredientsAPIService', () {
     IngredientsAPIService ingredientsAPIService = IngredientsAPIService();
     BPIngredient? ingredient;
